@@ -15,9 +15,9 @@ def writepgm(d, filename, classification):
 
 # Write header.
     f.write('P2\n')
-    f.write(f'# ${classificaton}\n')
-    f.write(f'${x} ${y}\n')
-    f.write(f'${white}\n')
+    f.write(f'# {classificaton}\n')
+    f.write(f'{x} ${y}\n')
+    f.write(f'{white}\n')
 
 # Write out 2d list.
     for j in range(y):
@@ -31,7 +31,7 @@ def writepgm(d, filename, classification):
             if quantised >= white:
                 quantised = white
 
-            f.write(f'${quantised} ')
+            f.write(f'{quantised} ')
         f.write('\n')
 
 # Tidy up.
@@ -58,7 +58,7 @@ def export_sets():
             image = element[0]
             category = classes[element[1]]
 
-            writepgm(image, f"${dataset}/${index}.pgm", category)
+            writepgm(image, f"{dataset}/{index}.pgm", category)
             index += 1
 
 
