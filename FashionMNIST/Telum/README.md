@@ -13,4 +13,12 @@ cp fashion_classifier.so fashion_MNIST
 
 (adjusting names of things as appropriate)
 
+You'll need to pull the libraries out of the ZDLC image and put them somewhere in your `PYTHONPATH`
+
+```
+mkdir pylibs
+podman run --rm -v $(pwd)/pylibs:/files:z --entrypoint '/usr/bin/bash' icr.io/ibmz/zdlc:4.1.1 -c "cp /usr/local/lib/PyRuntime.cpython-*-s390x-linux-gnu.so /files"
+export PYTHONPATH=$(pwd)/pylibs:${PYTHONPATH}
+```
+
 You should then be able to run `classifier.py` with a 28x28*256 greys pgm image of clothing (e.g. extracted from the FashionMNIST set)
