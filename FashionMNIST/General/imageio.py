@@ -34,3 +34,37 @@ def writepgm(d, filename, classification):
 
 # Tidy up.
     f.close()
+
+def readpgm(filename):
+    import numpy
+
+    with open(filename) as file:
+        raw_str = d.read().splitlines()
+
+        # Line 0 is "P2"
+        assert raw_str[0].strip() == "P2"
+
+        # Line 1 is classification
+        classification = raw_str[1][1:].strip()
+
+        # Line 2 is width, height
+        width_s, height_s = raw_str[2].split()
+        width = int(width_s)
+        height = int(height_s)
+
+        # Line 3 is white value, should be 255
+        white = int(raw_str[3])
+
+        if white != 255:
+            print(f"Warning - white value is not 255: {white}")
+        
+        # Initialise image
+        image = numpy.zeroes(shape=(height,width))
+        for ln in range(height):
+            numberline = raw_str[4 + ln].split()
+            for pt in range(width):
+                quantised = numberline(pt)
+                realval = quantised/white
+                image[ln,pt] = realval
+
+        return classification, image
