@@ -15,7 +15,7 @@ def writepgm(d, filename, classification):
 
 # Write header.
     f.write('P2\n')
-    f.write(f'# {classificaton}\n')
+    f.write(f'# {classification}\n')
     f.write(f'{x} ${y}\n')
     f.write(f'{white}\n')
 
