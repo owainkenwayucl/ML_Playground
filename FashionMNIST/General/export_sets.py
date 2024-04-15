@@ -23,13 +23,13 @@ def writepgm(d, filename, classification):
     for j in range(y):
         for i in range(x):
             v = d[a][b]
-			quantised = int(v * (num_colours - 1))
-
+            quantised = int(v * (num_colours - 1))
+            
             # Protect against having colour values outside our range.
-			if quantised < 0:
-				quantised = 0
-			if quantised >= white:
-				quantised = white
+            if quantised < 0:
+                quantised = 0
+            if quantised >= white:
+                quantised = white
 
             f.write(f'${quantised} ')
         f.write('\n')
