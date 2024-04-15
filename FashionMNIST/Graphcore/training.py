@@ -59,7 +59,7 @@ for epoch in tqdm(range(epochs), desc="epochs"):
 
 poptorch_model.detachFromDevice()
 
-torch.save(model.state_dict(), "classifier.pth")
+torch.save(model.state_dict(), "fashion_classifier.pth")
 
 # Inference
 
