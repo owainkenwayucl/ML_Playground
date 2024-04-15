@@ -63,7 +63,7 @@ def readpgm(filename):
         for ln in range(height):
             numberline = raw_str[4 + ln].split()
             for pt in range(width):
-                quantised = numberline(pt)
+                quantised = numberline[pt]
                 realval = quantised/white
                 image[ln,pt] = realval
 
