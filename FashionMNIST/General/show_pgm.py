@@ -8,4 +8,6 @@ if __name__ == "__main__":
         print(f"Usage {sys.argv[0]} <filename>")
         sys.exit(1)
 
-    show(readpgm(sys.argv[1]), ANSI_COLOURS)
+    c,image = readpgm(sys.argv[1])
+    show(image, ANSI_COLOURS)
+    print(c)
