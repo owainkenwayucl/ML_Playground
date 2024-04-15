@@ -55,7 +55,7 @@ def export_sets():
     for dataset in dataset_names:
         index = 0
         for element in datasets[dataset]:
-            image = element[0]
+            image = element[0][0]
             category = classes[element[1]]
 
             writepgm(image, f"{dataset}/{index}.pgm", category)
