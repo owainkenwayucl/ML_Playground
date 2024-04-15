@@ -59,7 +59,7 @@ def readpgm(filename):
             print(f"Warning - white value is not 255: {white}")
         
         # Initialise image
-        image = numpy.zeroes(shape=(height,width))
+        image = numpy.zeros(shape=(height,width))
         for ln in range(height):
             numberline = raw_str[4 + ln].split()
             for pt in range(width):
