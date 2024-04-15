@@ -22,7 +22,7 @@ def writepgm(d, filename, classification):
 # Write out 2d list.
     for j in range(y):
         for i in range(x):
-            v = d[a][b]
+            v = d[j][i]
             quantised = int(v * (num_colours - 1))
             
             # Protect against having colour values outside our range.
