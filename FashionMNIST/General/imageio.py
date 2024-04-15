@@ -38,8 +38,8 @@ def writepgm(d, filename, classification):
 def readpgm(filename):
     import numpy
 
-    with open(filename) as file:
-        raw_str = d.read().splitlines()
+    with open(filename) as f:
+        raw_str = f.read().splitlines()
 
         # Line 0 is "P2"
         assert raw_str[0].strip() == "P2"
