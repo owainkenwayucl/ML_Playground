@@ -9,7 +9,6 @@ convert_types = {"f32":"float32",
 def inference(image):
     session = OMExecutionSession(model)
     input_signature_json = json.loads(session.input_signature())
-    print(input_signature_json)
     signature = input_signature_json[0]
     input_type = signature["type"]
 
