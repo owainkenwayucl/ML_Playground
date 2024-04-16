@@ -5,7 +5,7 @@ model = "fashion_MNIST/fashion_classifier.so"
 
 def inference(image):
 
-    session = OMExecutionSession(model_so)
+    session = OMExecutionSession(model)
     input_signature_json = json.loads(session.input_signature())
     print(input_signature_json)
     signature = input_signature_json["input"]
