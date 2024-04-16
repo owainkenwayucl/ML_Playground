@@ -34,7 +34,7 @@ def main():
 
     results = inference(test_image)
  
-    print(f"Expected: {c}\nPredicted: {classes[np.argmax(results)]}")
+    print(f"Expected: {c}\nPredicted: {classes[np.argmax(results['output'])]}")
 
 if __name__ == "__main__":
     main()
