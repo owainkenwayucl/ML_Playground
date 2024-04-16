@@ -1,5 +1,5 @@
 from PyRuntime import OMExecutionSession
-
+import json
 import numpy as np
 model = "fashion_MNIST/fashion_classifier.so"
 
