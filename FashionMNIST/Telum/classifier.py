@@ -3,18 +3,21 @@ import json
 import numpy as np
 model = "fashion_MNIST/fashion_classifier.so"
 
-def inference(image):
+convert_types = {"f32":"float32",
+                 "f16":"float16"}
 
+def inference(image):
     session = OMExecutionSession(model)
     input_signature_json = json.loads(session.input_signature())
     print(input_signature_json)
-    signature = input_signature_json["input"]
+    signature = input_signature_json[0]
     input_type = signature["type"]
 
-    image = image[np.newaxis,np.newaxis,...].astype(input_type)
-    imageset = {}
-    imageset["input"] = image
-    output = session.run(imageset)
+    image = image[np.newaxis,np.newaxis,...].astype(convert_types[input_type])
+    imageset = []
+    imageset.append(image)
+    output = {}
+    output["output"] = session.run(imageset)
 
     return output
 
@@ -37,7 +40,7 @@ def main():
 
     results = inference(test_image)
  
-    print(f"Expected: {c}\nPredicted: {classes[np.argmax(results['output'])]}")
+    print(f"Expected: {c}\nPredicted: {classes[np.argmax(results["output"])]}")
 
 if __name__ == "__main__":
     main()
