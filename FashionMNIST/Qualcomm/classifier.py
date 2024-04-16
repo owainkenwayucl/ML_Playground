@@ -1,4 +1,4 @@
-import qiac
+import qaic
 import numpy as np
 model = "fashionMNIST/aic_binary_dir/programqpc.bin"
 
