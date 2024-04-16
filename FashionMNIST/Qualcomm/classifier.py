@@ -3,15 +3,15 @@ import numpy as np
 model = "fashion_MNIST/aic-binary-dir/programqpc.bin"
 
 def inference(image):
-    vit_sess = qaic.Session(model_path = model)
+    session = qaic.Session(model_path = model)
 
-    vit_sess.setup() 
-    input_shape, input_type = vit_sess.model_input_shape_dict['input']
-    output_shape, output_type = vit_sess.model_output_shape_dict['output']
+    session.setup() 
+    input_shape, input_type = session.model_input_shape_dict['input']
+    output_shape, output_type = session.model_output_shape_dict['output']
     image = image[np.newaxis,np.newaxis,...].astype(input_type)
     imageset = {}
     imageset["input"] = image
-    output = vit_sess.run(imageset)
+    output = session.run(imageset)
 
     return output
 
