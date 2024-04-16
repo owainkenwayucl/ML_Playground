@@ -16,8 +16,10 @@ def inference(image):
     return output
 
 def main():
+    import sys
     from imageio import readpgm
     from termshow import show, ANSI_COLOURS
+
     iname = "test.pgm"
 
     classes = ("T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot",)
@@ -26,6 +28,10 @@ def main():
         iname = sys.argv[1]
 
     c, test_image = readpgm(iname)
+
+    print(f"Loaded image: {iname}")
+    show(test_image, ANSI_COLOURS)
+
     results = inference(test_image)
  
     print(f"Expected: {c}\nPredicted: {classes[np.argmax(results)]}")
