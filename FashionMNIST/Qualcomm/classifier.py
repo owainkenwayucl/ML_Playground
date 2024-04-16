@@ -1,9 +1,9 @@
 import qaic
 import numpy as np
-model = "fashionMNIST/aic_binary_dir/programqpc.bin"
+model = "fashion_MNIST/aic-binary-dir/programqpc.bin"
 
 def inference(image):
-    vit_sess = qiac.Session(model_path = model)
+    vit_sess = qaic.Session(model_path = model)
     image = image[np.newaxis,np.newaxis,...].astype(np_type)
     imageset = {}
     imageset["image"] = image
@@ -23,6 +23,6 @@ if __name__ == "__main__":
 
     test_image = readpgm(fname)
 
-    results = inference(image)
+    results = inference(test_image)
 
     print(results)
