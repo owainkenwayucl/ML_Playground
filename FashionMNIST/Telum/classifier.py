@@ -1,0 +1,43 @@
+from PyRuntime import OMExecutionSession
+
+import numpy as np
+model = "fashion_MNIST/fashion_classifier.so"
+
+def inference(image):
+
+    session = OMExecutionSession(model_so)
+    input_signature_json = json.loads(session.input_signature())
+    print(input_signature_json)
+    signature = input_signature_json["input"]
+    input_type = signature["type"]
+
+    image = image[np.newaxis,np.newaxis,...].astype(input_type)
+    imageset = {}
+    imageset["input"] = image
+    output = session.run(imageset)
+
+    return output
+
+def main():
+    import sys
+    from imageio import readpgm
+    from termshow import show, ANSI_COLOURS
+
+    iname = "test.pgm"
+
+    classes = ("T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot",)
+
+    if len(sys.argv) > 1:
+        iname = sys.argv[1]
+
+    c, test_image = readpgm(iname)
+
+    print(f"Loaded image: {iname}")
+    show(test_image, ANSI_COLOURS)
+
+    results = inference(test_image)
+ 
+    print(f"Expected: {c}\nPredicted: {classes[np.argmax(results['output'])]}")
+
+if __name__ == "__main__":
+    main()
