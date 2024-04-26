@@ -1,4 +1,4 @@
-package imageio
+package imageio;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class pgm {
         int height = this.image_tensor[0].length;       
 
         ret_val = new double[width][height];
-        for (int i = 0, i<width; i++){
+        for (int i = 0; i<width; i++){
             for (int j = 0; j<height; j++){
                 ret_val[i][j] = this.image_tensor[i][j];
             }
@@ -63,8 +63,8 @@ public class pgm {
             // Image
             for (int j = 0; j < height; j++) {
                 for (int i = 0; j < width; j++) {
-                    quantised = (int) (this.image_tensor[i][j] * white)
-                    imagefile.write(Integer.toString(quantised) + " ")
+                    quantised = (int) (this.image_tensor[i][j] * white);
+                    imagefile.write(Integer.toString(quantised) + " ");
                 }
                 image_file.write("\n")
             }
@@ -72,7 +72,7 @@ public class pgm {
             image_file.close();
 
         } catch (IOException e) {
-            System.out.println("Error writing to file: " + filename)
+            System.out.println("Error writing to file: " + filename);
             e.printStackTrace();
         }
     }
