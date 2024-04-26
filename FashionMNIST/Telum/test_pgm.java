@@ -6,8 +6,8 @@ public class test_pgm {
         String test_out = arg[1];
 
         pgm test_image = new pgm();
-        pgm.read_image(test_file);
-        pgm.show_image();
-        pgm.write_image(test_out);
+        test_image.read_image(test_file);
+        test_image.show_image();
+        test_image.write_image(test_out);
     }
 }
