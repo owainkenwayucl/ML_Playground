@@ -3,12 +3,12 @@ import imageio.pgm;
 public class classifier {
 
     public static double[] inference(pgm image) {
-        double ret_val = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        double[] ret_val = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         return ret_val;
     }
 
     public static int max_at(double[] data) {
-        max_loc = 0;
+        int max_loc = 0;
 
         for (int i = 0; i < data.length; i++) {
             if (data[i] > max_loc) {
@@ -19,7 +19,7 @@ public class classifier {
         return max_loc;
     }
 
-    public static void main(String args) {
+    public static void main(String[] args) {
         String[] fashion_classes = {"T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"};
 
         if (args.length == 0) {
@@ -36,7 +36,7 @@ public class classifier {
 
         String prediction = fashion_classes[max_at(results)];
 
-        System.out.println("Expected: " + image.classification);
+        System.out.println("Expected: " + image.get_classification());
         System.out.println("Predicted: " + prediction);
 
     }
