@@ -19,8 +19,8 @@ public class classifier {
         OMTensorList images = new OMTensorList(images_.toArray(new OMTensor[0]));
 
         // Do the inference.
-        OMTensorList output = OMModel.mainGraph(images).getOmtArray();
-        float[] ret_val = OMTensorList[0].getFloatData();
+        OMTensor[] output = OMModel.mainGraph(images).getOmtArray();
+        float[] ret_val = output[0].getFloatData();
 
         //float[] ret_val = {0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
         return ret_val;
