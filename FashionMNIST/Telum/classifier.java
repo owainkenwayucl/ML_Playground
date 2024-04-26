@@ -3,14 +3,15 @@ import imageio.pgm;
 public class classifier {
 
     public static double[] inference(pgm image) {
-        return [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        double ret_val = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+        return ret_val;
     }
 
     public static int max_at(double[] data) {
         max_loc = 0;
 
         for (int i = 0; i < data.length; i++) {
-            if data[i] > max loc {
+            if (data[i] > max_loc) {
                 max_loc = i;
             }
         }
@@ -19,7 +20,7 @@ public class classifier {
     }
 
     public static void main(String args) {
-        String[] fashion_classes = ["T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"];
+        String[] fashion_classes = {"T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"};
 
         if (args.length == 0) {
             System.out.println("java classifier <image file>");
