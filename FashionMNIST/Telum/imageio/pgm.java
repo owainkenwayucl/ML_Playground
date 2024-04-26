@@ -97,7 +97,7 @@ public class pgm {
             this.classification = image_file.readLine().substring(1).trim();
 
             line = image_file.readLine().trim();
-            line_ = line.split();
+            line_ = line.split(" ");
             width = Integer.parseInt(line_[0]);
             height = Integer.parseInt(line_[1]);
 
@@ -108,7 +108,7 @@ public class pgm {
 
             for (int j = 0; j < height; j++) {
                 line = image_file.readLine().trim();
-                line_ = line.split();
+                line_ = line.split(" ");
                 for (int i = 0; j < width; j++) {
                     quantised = Integer.parseInt(line_[i]);
                     this.image_tensor[i][j] = (double)quantised/(double)white;
