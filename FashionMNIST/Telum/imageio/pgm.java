@@ -109,7 +109,7 @@ public class pgm {
             String[] line_;
             // Header
             line = image_file.readLine().trim();
-            if (line != "P2") throw new IOException("Not a PGM file!!: " + line);
+            if (line.equals("P2")) throw new IOException("Not a PGM file!!: " + line);
 
             this.classification = image_file.readLine().substring(1).trim();
 
