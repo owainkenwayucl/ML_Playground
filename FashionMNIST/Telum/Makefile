@@ -12,10 +12,10 @@ classifier/fashion_mnist.class: classifier/fashion_mnist.java Makefile
 imageio/pgm.class: imageio/pgm.java Makefile
 	javac imageio/pgm.java
 
-imageio/test/test_pgm.class: imageio/tests/test_pgm.java Makefile
+imageio/tests/test_pgm.class: imageio/tests/test_pgm.java Makefile
 	javac imageio/tests/test_pgm.java
 
-clear:
+clean:
 	rm -f imageio/*.class
 	rm -f imageio/tests/*.class
 	rm -f classifier/*.class
