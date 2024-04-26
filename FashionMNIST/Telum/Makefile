@@ -4,7 +4,7 @@ classifier.jar: classifier/fashion_mnist.class Makefile
 	jar -cf classifier.jar classifier
 
 imageio.jar: imageio/pgm.class imageio/tests/test_pgm.class Makefile 
-	jar -cf imageio.jar
+	jar -cf imageio.jar imageio
 
 classifier/fashion_mnist.class: classifier/fashion_mnist.java Makefile 
 	javac -classpath c_java_libs/lib/javaruntime.jar:.  classifier/fashion_mnist.java
