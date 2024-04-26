@@ -10,17 +10,17 @@ import imageio.pgm;
 public class classifier {
 
     public static float[] inference(pgm image) {
-        width = 28;
-        height = 28;
+        int width = 28;
+        int height = 28;
         long[] input_shape = {1l,1l,(long)width,(long)height}; // hard coding bad
         long input_size = (long) width * height;
         float[] flat_image = new float[width*height];
 
         int inc = 0;
-
+        float[][] image_t = image.get_tensor();
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                flat_image[inc] = image[i][j];
+                flat_image[inc] = image_[i][j];
             }
         }
 
