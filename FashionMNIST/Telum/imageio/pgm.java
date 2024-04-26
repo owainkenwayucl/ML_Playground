@@ -7,9 +7,24 @@ import java.io.IOException;
 public class pgm {
     private double[][] image_tensor;
     private String classification;
-    
+   
     public pgm() {
         // Nothing!
+    }
+
+    public static String ansi_colour_factory(double colour) {
+        String ret_val = "\033[48;5;";
+
+        int colour_ = (int) (colour * 25.0);
+        if (colour_ == 25) {
+            colour_ = 231;
+        } else {
+            colour_ = colour_ + 232;
+        }
+        ret_val = ret_val + Integer.toString(colour_);
+
+        ret_val = ret_val + "m  \033[m";
+        return ret_val;
     }
 
     public void set_classification(String new_classification) {
@@ -64,11 +79,13 @@ public class pgm {
             
             // Image
             for (int j = 0; j < height; j++) {
+                String line = "";
                 for (int i = 0; j < width; j++) {
                     quantised = (int) (this.image_tensor[i][j] * white);
-                    image_file.write(Integer.toString(quantised) + " ");
+                    line = line + Integer.toString(quantised) + " ";
                 }
-                image_file.write("\n");
+                line = line + "\n";
+                image_file.write(line);
             }
 
             image_file.close();
@@ -123,5 +140,18 @@ public class pgm {
             e.printStackTrace();
         }
 
+    }
+
+    public void show_image() {
+        int width = this.image_tensor.length;
+        int height = this.image_tensor[0].length;       
+
+        for (int j = 0; j < height; j++) {
+            String line = "";
+            for (int i = 0; i < width; i++) {
+                line = line + ansi_colour_factory(this.image_tensor[i][j]) + " ";
+            }
+            System.out.println(line);
+        }   
     }
 }
