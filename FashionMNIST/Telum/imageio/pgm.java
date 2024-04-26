@@ -1,5 +1,7 @@
 package imageio;
 import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 public class pgm {
@@ -75,5 +77,51 @@ public class pgm {
             System.out.println("Error writing to file: " + filename);
             e.printStackTrace();
         }
+    }
+
+    public void read_image(String filename) {
+        int width;
+        int height;
+        int white;
+        int quantised;
+        
+        try {
+            BufferedReader image_file = new BufferedReader(new FileReader(filename));
+
+            String line;
+            String[] line_;
+            // Header
+            line = image_file.readLine().trim();
+            if (line != "P2") throw new IOException("Not a PGM file!!");
+
+            this.classification = image_file.readLine().substring(1).trim();
+
+            line = image_file.readLine().trim();
+            line_ = line.split();
+            width = Integer.parseInt(line_[0]);
+            height = Integer.parseInt(line_[1]);
+
+            white = Integer.parseInt(image_file.readLine().trim());
+            
+            // Image
+            this.image_tensor = new double[width][height];
+
+            for (int j = 0; j < height; j++) {
+                line = image_file.readLine().trim();
+                line_ = line.split();
+                for (int i = 0; j < width; j++) {
+                    quantised = Integer.parseInt(line_[i]);
+                    this.image_tensor[i][j] = (double)quantised/(double)white;
+                }
+            }
+
+            image_file.close();
+
+
+        } catch (IOException e) {
+            System.out.println("Error reading from file: " + filename);
+            e.printStackTrace();
+        }
+
     }
 }
