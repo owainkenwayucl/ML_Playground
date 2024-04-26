@@ -18,7 +18,7 @@ public class pgm {
 
     public pgm(String filename, boolean display) {
         read_image(filename);
-        if (display == True) {
+        if (display == true) {
             show_image();
         }
     }
