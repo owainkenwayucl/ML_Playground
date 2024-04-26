@@ -10,21 +10,12 @@ import imageio.pgm;
 public class classifier {
 
     public static float[] inference(pgm image) {
-        int width = 28;
-        int height = 28;
+        int width = image.length;
+        int height = image[0].length;
         long[] input_shape = {1l,1l,(long)width,(long)height}; // hard coding bad
         long input_size = (long) width * height;
-        float[] flat_image = new float[width*height];
-
-        int inc = 0;
-        float[][] image_t = image.get_tensor();
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < width; i++) {
-                flat_image[inc] = image_t[i][j];
-                inc++;
-            }
-        }
-
+        float[] flat_image = flatten_image(image);
+        
         // There has to be a neater way!
         ArrayList<OMTensor> images_ = new ArrayList<OMTensor>();
         images_.add(new OMTensor(flat_image, input_shape));
@@ -50,9 +41,31 @@ public class classifier {
         return max_loc;
     }
 
-    public static void main(String[] args) {
-        String[] fashion_classes = {"T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"};
+    public static float[] flatten_image(float[][] image) {
+        int width = image.length;
+        int height = image[0].length;
+        int input_size = width * height;
 
+        float[] flat_image = new float[width*height];
+
+        int inc = 0;
+        float[][] image_t = image.get_tensor();
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                flat_image[inc] = image_t[i][j];
+                inc++;
+            }
+        }        
+        return flat_image;
+    }
+
+    public static String classify(float[] probabilities) {
+        String[] fashion_classes = {"T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"};
+        String prediction = fashion_classes[max_at(probabilities)];
+        return prediction;
+    }
+
+    public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("java classifier <image file>");
             System.exit(0);
@@ -65,7 +78,7 @@ public class classifier {
         image.show_image();
         float[] results = inference(image);
 
-        String prediction = fashion_classes[max_at(results)];
+        String prediction = classify(results);
 
         System.out.println("Expected: " + image.get_classification());
         System.out.println("Predicted: " + prediction);
