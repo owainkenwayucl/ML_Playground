@@ -1,0 +1,6 @@
+{:deps {
+        imageio/jar {:local/root "imageio.jar"}
+        classifier/jar {:local/root "classifier.jar"}
+        fashion_mnist/jar {:local/root "fashion_MNIST/fashion_classifier.jar"}
+        }
+}
