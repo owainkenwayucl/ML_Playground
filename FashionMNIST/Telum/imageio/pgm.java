@@ -42,7 +42,7 @@ public class pgm {
                 this.image_tensor[i][j] = new_data[i][j];
             }
         }
-        this.image_tensor = new_data();
+
     }
 
     public void write_image(String filename) {
