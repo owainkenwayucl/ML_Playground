@@ -10,12 +10,13 @@ import imageio.pgm;
 public class classifier {
 
     public static float[] inference(pgm image) {
-        int width = image.length;
-        int height = image[0].length;
+        float[][] image_t = image.get_tensor();
+        int width = image_t.length;
+        int height = image[0]_t.length;
         long[] input_shape = {1l,1l,(long)width,(long)height}; // hard coding bad
         long input_size = (long) width * height;
-        float[] flat_image = flatten_image(image);
-        
+        float[] flat_image = flatten_image(image_t);
+
         // There has to be a neater way!
         ArrayList<OMTensor> images_ = new ArrayList<OMTensor>();
         images_.add(new OMTensor(flat_image, input_shape));
