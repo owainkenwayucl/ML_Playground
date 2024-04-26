@@ -4,7 +4,7 @@ public class pgm {
     private[][] image_tensor;
     
     public pgm() {
-
+        // Nothing!
     }
 
     public double[][] get_tensor() {
@@ -32,5 +32,12 @@ public class pgm {
             }
         }
         this.image_tensor = new_data();
+    }
+
+    public void write_image(String filename) {
+        width = this.image_tensor.length;
+        height = this.image_tensor[0].length; 
+
+
     }
 }
