@@ -41,7 +41,7 @@ public class classifier {
         int max_loc = 0;
 
         for (int i = 0; i < data.length; i++) {
-            if (data[i] > max_loc) {
+            if (data[i] > data[max_loc]) {
                 max_loc = i;
             }
         }
