@@ -1,4 +1,4 @@
-package imageio;
+package imageio.tests;
 import imageio.pgm;
 
 public class test_pgm {
