@@ -126,6 +126,7 @@ public class pgm {
 
             for (int j = 0; j < height; j++) {
                 line = image_file.readLine().trim();
+                System.out.println(line);
                 line_ = line.split(" ");
                 for (int i = 0; j < width; j++) {
                     quantised = Integer.parseInt(line_[i]);
