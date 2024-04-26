@@ -8,6 +8,7 @@ public class test_pgm {
 
         pgm test_image = new pgm();
         test_image.read_image(test_file);
+        System.out.println(test_image.get_classification());
         test_image.show_image();
         test_image.write_image(test_out);
     }
