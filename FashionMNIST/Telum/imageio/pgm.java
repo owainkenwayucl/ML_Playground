@@ -126,7 +126,6 @@ public class pgm {
 
             for (int j = 0; j < height; j++) {
                 line = image_file.readLine().trim();
-                System.out.println(line);
                 line_ = line.split(" ");
                 for (int i = 0; i < width; i++) {
                     quantised = Integer.parseInt(line_[i]);
@@ -152,7 +151,7 @@ public class pgm {
         for (int j = 0; j < height; j++) {
             String line = "";
             for (int i = 0; i < width; i++) {
-                line = line + ansi_colour_factory(this.image_tensor[i][j]) + " ";
+                line = line + ansi_colour_factory(this.image_tensor[i][j]);
             }
             System.out.println(line);
         }   
