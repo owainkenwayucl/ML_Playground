@@ -3,7 +3,7 @@ import imageio.pgm;
 public class classifier {
 
     public static double[] inference(pgm image) {
-        double ret_val = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+        double ret_val = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         return ret_val;
     }
 
