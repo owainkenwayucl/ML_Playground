@@ -22,7 +22,7 @@ public class pgm {
         int width = this.image_tensor.length;
         int height = this.image_tensor[0].length;       
 
-        ret_val = new double[width][height];
+        double[][] ret_val = new double[width][height];
         for (int i = 0; i<width; i++){
             for (int j = 0; j<height; j++){
                 ret_val[i][j] = this.image_tensor[i][j];
@@ -64,7 +64,7 @@ public class pgm {
             for (int j = 0; j < height; j++) {
                 for (int i = 0; j < width; j++) {
                     quantised = (int) (this.image_tensor[i][j] * white);
-                    imagefile.write(Integer.toString(quantised) + " ");
+                    image_file.write(Integer.toString(quantised) + " ");
                 }
                 image_file.write("\n");
             }
