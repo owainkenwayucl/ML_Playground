@@ -15,8 +15,8 @@ public class pgm {
     public static String ansi_colour_factory(double colour) {
         String ret_val = "\033[48;5;";
 
-        int colour_ = (int) (colour * 25.0);
-        if (colour_ == 25) {
+        int colour_ = (int) (colour * 24.0);
+        if (colour_ == 24) {
             colour_ = 231;
         } else {
             colour_ = colour_ + 232;
