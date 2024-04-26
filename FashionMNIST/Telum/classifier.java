@@ -3,7 +3,7 @@ import com.ibm.onnxmlir.OMTensor;
 import com.ibm.onnxmlir.OMTensorList;
 
 import java.util.ArrayList;
-import java.util.Array;
+import java.util.Arrays;
 
 import imageio.pgm;
 
