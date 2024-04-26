@@ -80,7 +80,7 @@ public class pgm {
             // Image
             for (int j = 0; j < height; j++) {
                 String line = "";
-                for (int i = 0; j < width; j++) {
+                for (int i = 0; i < width; i++) {
                     quantised = (int) (this.image_tensor[i][j] * white);
                     line = line + Integer.toString(quantised) + " ";
                 }
@@ -128,7 +128,7 @@ public class pgm {
                 line = image_file.readLine().trim();
                 System.out.println(line);
                 line_ = line.split(" ");
-                for (int i = 0; j < width; j++) {
+                for (int i = 0; i < width; i++) {
                     quantised = Integer.parseInt(line_[i]);
                     this.image_tensor[i][j] = (double)quantised/(double)white;
                 }
