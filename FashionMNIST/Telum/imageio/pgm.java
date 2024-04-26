@@ -37,7 +37,7 @@ public class pgm {
 
         this.image_tensor = new double[width][height];
 
-        for (int i = 0, i<width; i++){
+        for (int i = 0; i<width; i++){
             for (int j = 0; j<height; j++){
                 this.image_tensor[i][j] = new_data[i][j];
             }
@@ -66,7 +66,7 @@ public class pgm {
                     quantised = (int) (this.image_tensor[i][j] * white);
                     imagefile.write(Integer.toString(quantised) + " ");
                 }
-                image_file.write("\n")
+                image_file.write("\n");
             }
 
             image_file.close();
