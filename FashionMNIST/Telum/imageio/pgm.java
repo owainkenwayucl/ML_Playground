@@ -5,14 +5,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class pgm {
-    private double[][] image_tensor;
+    private float[][] image_tensor;
     private String classification;
    
     public pgm() {
         // Nothing!
     }
 
-    public static String ansi_colour_factory(double colour) {
+    public static String ansi_colour_factory(float colour) {
         String ret_val = "\033[48;5;";
 
         int colour_ = (int) (colour * 24.0);
@@ -35,11 +35,11 @@ public class pgm {
         return new String(this.classification);
     }
 
-    public double[][] get_tensor() {
+    public float[][] get_tensor() {
         int width = this.image_tensor.length;
         int height = this.image_tensor[0].length;       
 
-        double[][] ret_val = new double[width][height];
+        float[][] ret_val = new float[width][height];
         for (int i = 0; i<width; i++){
             for (int j = 0; j<height; j++){
                 ret_val[i][j] = this.image_tensor[i][j];
@@ -48,11 +48,11 @@ public class pgm {
         return ret_val;
     }
 
-    public void set_tensor(double[][] new_data) {
+    public void set_tensor(float[][] new_data) {
         int width = new_data.length;
         int height = new_data[0].length;
 
-        this.image_tensor = new double[width][height];
+        this.image_tensor = new float[width][height];
 
         for (int i = 0; i<width; i++){
             for (int j = 0; j<height; j++){
@@ -122,14 +122,14 @@ public class pgm {
             white = Integer.parseInt(image_file.readLine().trim());
             
             // Image
-            this.image_tensor = new double[width][height];
+            this.image_tensor = new float[width][height];
 
             for (int j = 0; j < height; j++) {
                 line = image_file.readLine().trim();
                 line_ = line.split(" ");
                 for (int i = 0; i < width; i++) {
                     quantised = Integer.parseInt(line_[i]);
-                    this.image_tensor[i][j] = (double)quantised/(double)white;
+                    this.image_tensor[i][j] = (float)quantised/(float)white;
                 }
             }
 

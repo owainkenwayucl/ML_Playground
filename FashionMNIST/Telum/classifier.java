@@ -1,13 +1,17 @@
+import com.ibm.onnxmlir.OMModel;
+import com.ibm.onnxmlir.OMTensor;
+import com.ibm.onnxmlir.OMTensorList;
+
 import imageio.pgm;
 
 public class classifier {
 
-    public static double[] inference(pgm image) {
-        double[] ret_val = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    public static float[] inference(pgm image) {
+        float[] ret_val = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         return ret_val;
     }
 
-    public static int max_at(double[] data) {
+    public static int max_at(float[] data) {
         int max_loc = 0;
 
         for (int i = 0; i < data.length; i++) {
@@ -32,7 +36,7 @@ public class classifier {
 
         System.out.println("Loaded Image: " + args[0]);
         image.show_image();
-        double[] results = inference(image);
+        float[] results = inference(image);
 
         String prediction = fashion_classes[max_at(results)];
 
