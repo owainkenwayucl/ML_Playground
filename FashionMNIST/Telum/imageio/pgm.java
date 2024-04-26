@@ -12,6 +12,17 @@ public class pgm {
         // Nothing!
     }
 
+    public pgm(String filename) {
+        read_image(filename);
+    }
+
+    public pgm(String filename, display) {
+        read_image(filename);
+        if display {
+            show_image();
+        }
+    }
+
     public static String ansi_colour_factory(float colour) {
         String ret_val = "\033[48;5;";
 
