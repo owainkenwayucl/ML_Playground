@@ -93,6 +93,7 @@ public class pgm {
         } catch (IOException e) {
             System.out.println("Error writing to file: " + filename);
             e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -138,6 +139,7 @@ public class pgm {
         } catch (IOException e) {
             System.out.println("Error reading from file: " + filename);
             e.printStackTrace();
+            System.exit(1);
         }
 
     }
