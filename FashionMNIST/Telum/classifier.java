@@ -20,13 +20,13 @@ public class classifier {
         float[][] image_t = image.get_tensor();
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                flat_image[inc] = image_[i][j];
+                flat_image[inc] = image_t[i][j];
             }
         }
 
         // There has to be a neater way!
         ArrayList<OMTensor> images_ = new ArrayList<OMTensor>();
-        images_.add(new OMTensor(flat_image.get_tensor(), input_shape));
+        images_.add(new OMTensor(flat_image, input_shape));
         OMTensorList images = new OMTensorList(images_.toArray(new OMTensor[0]));
 
         // Do the inference.
