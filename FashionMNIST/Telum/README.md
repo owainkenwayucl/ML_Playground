@@ -56,3 +56,27 @@ And to run it:
 ```
 java -classpath fashion_MNIST/fashion_classifier.jar:. classifier fashion_MNIST/data/test/0.pgm
 ```
+
+## Clojure
+
+Follow the build steps for Java and then run `make` to build `.jar` file versions of `classifier` and `imagio` (make sure they match what's in `deps.edn`).
+
+You should then be able to call it from clojure e.g.
+
+```
+[uccaoke@vind1 Telum]$ clj
+Clojure 1.11.2
+user=> (import imageio.pgm)
+imageio.pgm
+user=> (import classifier.fashion_mnist)
+classifier.fashion_mnist
+user=> (def image (new pgm))
+#'user/image
+user=> (.read_image image "test.pgm")
+nil
+user=> (.get_classification image)
+"Ankle boot"
+user=> (fashion_mnist/classify (fashion_mnist/inference image))
+"Ankle boot"
+user=> 
+```
