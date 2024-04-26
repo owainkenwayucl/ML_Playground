@@ -16,7 +16,7 @@ public class pgm {
         read_image(filename);
     }
 
-    public pgm(String filename, display) {
+    public pgm(String filename, boolean display) {
         read_image(filename);
         if (display == True) {
             show_image();
