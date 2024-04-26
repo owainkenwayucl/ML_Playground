@@ -13,7 +13,7 @@ public class classifier {
         float[][] image_t = image.get_tensor();
         int width = image_t.length;
         int height = image_t[0].length;
-        long[] input_shape = {1l,1l,(long)width,(long)height}; // hard coding bad
+        long[] input_shape = {1l,1l,(long)width,(long)height}; 
         long input_size = (long) width * height;
         float[] flat_image = flatten_image(image_t);
 
@@ -26,7 +26,6 @@ public class classifier {
         OMTensor[] output = OMModel.mainGraph(images).getOmtArray();
         float[] ret_val = output[0].getFloatData();
 
-        //float[] ret_val = {0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
         return ret_val;
     }
 
