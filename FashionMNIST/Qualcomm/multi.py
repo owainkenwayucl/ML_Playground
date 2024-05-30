@@ -78,7 +78,7 @@ def main():
     results = inference(images)
     stop = time.time()
 
-    print(results)
+    #print(results)
     correct = 0
 
     for a in range(n):
