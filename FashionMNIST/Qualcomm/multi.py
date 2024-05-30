@@ -14,7 +14,7 @@ def compile_model(model="fashion_MNIST/fashion_classifier.onnx", batch_size=1):
     import sys
     import os.path
 
-    command = "/opt/qti-aic/exec/qaic-exec -aic-hw -aic-hw-version=2.0 -compile-only -aic-num-cores=4 -m=fashion_MNIST/fashion_classifier.onnx -onnx-define-symbol=batch_size," + str(batch_size) + " -aic-binary-dir=fashion_MNIST/aic-binary-dir_" + str(batch_size)
+    command = f"/opt/qti-aic/exec/qaic-exec -aic-hw -aic-hw-version=2.0 -compile-only -aic-num-cores=4 -m={model} -onnx-define-symbol=batch_size,{batch_size} -aic-binary-dir=fashion_MNIST/aic-binary-dir_{batch_size}"
 
     output_file = f"{model_dir}_{batch_size}/{model_file}"
 
