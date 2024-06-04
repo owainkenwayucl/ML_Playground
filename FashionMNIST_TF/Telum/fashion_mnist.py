@@ -80,9 +80,10 @@ model.compile(optimizer='adam',
 
 # Train it     
 start = time.time()
+print(f"Timing starting at {start}")
 model.fit(train_images, train_labels, epochs=10)
 elapsed = time.time() - start
-print(f"Training time: {elapsed}")
+print(f"Training time: {elapsed}s")
 
 # Test its loss on the test data aka how accurate is it
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
