@@ -48,6 +48,7 @@ import tensorflow as tf
 # Helper libraries
 import numpy as np
 import termshow
+import sys
 from tensorflow.python import ipu
 
 print(tf.__version__)
@@ -69,6 +70,10 @@ test_images = test_images / 255.0
 # Configure the IPU system
 cfg = ipu.config.IPUConfig()
 cfg.auto_select_ipus = 4
+
+# Allow user to specify number of accelerators on command-line.
+if len(sys.argv) > 1:
+    cfg.auto_select_ipus = int(sys.argv[1])
 cfg.configure_ipu_system()
 
 # Create an IPU distribution strategy.
