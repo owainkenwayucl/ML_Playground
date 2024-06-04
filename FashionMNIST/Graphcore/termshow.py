@@ -40,7 +40,7 @@ _ansi_colour_numbers = [x + 231 + 1 for x in range(24)]
 _ansi_colour_numbers.append(231)
 ANSI_COLOURS=['\033[48;5;'+str(x)+'m  \033[m' for x in _ansi_colour_numbers]
 
-def show(data, colours=COLOURS):
+def show(data, colours=ANSI_COLOURS):
 	height = len(data)
 	num_colours=len(colours)
 	for a in range(height):
