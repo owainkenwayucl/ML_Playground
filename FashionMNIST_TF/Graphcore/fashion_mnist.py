@@ -97,7 +97,7 @@ with strategy.scope():
 
     # Train it     
     start = time.time
-    print(f"Timing starting at {start}")()
+    print(f"Timing starting at {start}")
     model.fit(train_images, train_labels, epochs=10)
     elapsed = time.time() - start
     print(f"Training time: {elapsed}s")
