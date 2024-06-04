@@ -99,7 +99,7 @@ with strategy.scope():
     start = time.time()
     print(f"Timing starting at {start}")
     model.fit(train_images, train_labels, epochs=10)
-    finish = time.time()
+    elapsed = time.time()
     print(f"Training time: {elapsed}s")
 
     # Test its loss on the test data aka how accurate is it
