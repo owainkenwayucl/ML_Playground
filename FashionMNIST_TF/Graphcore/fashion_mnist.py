@@ -96,10 +96,10 @@ with strategy.scope():
                 metrics=['accuracy'])
 
     # Train it     
-    start = time.time
+    start = time.time()
     print(f"Timing starting at {start}")
     model.fit(train_images, train_labels, epochs=10)
-    elapsed = time.time() - start
+    finish = time.time()
     print(f"Training time: {elapsed}s")
 
     # Test its loss on the test data aka how accurate is it
