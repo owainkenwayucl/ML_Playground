@@ -48,6 +48,7 @@ import tensorflow as tf
 # Helper libraries
 import numpy as np
 import termshow
+import time
 
 print(tf.__version__)
 
@@ -78,7 +79,10 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # Train it     
+start = time.time()
 model.fit(train_images, train_labels, epochs=10)
+elapsed = time.time() - start
+print(f"Training time: {elapsed}")
 
 # Test its loss on the test data aka how accurate is it
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
