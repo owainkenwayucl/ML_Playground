@@ -49,6 +49,8 @@ import tensorflow as tf
 import numpy as np
 import termshow
 import sys
+import time 
+
 from tensorflow.python import ipu
 
 print(tf.__version__)
@@ -94,7 +96,10 @@ with strategy.scope():
                 metrics=['accuracy'])
 
     # Train it     
+    start = time.time()
     model.fit(train_images, train_labels, epochs=10)
+    elapsed = time.time() - start
+    print(f"Training time: {elapsed}")
 
     # Test its loss on the test data aka how accurate is it
     test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2, batch_size=10)
