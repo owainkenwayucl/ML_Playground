@@ -101,7 +101,7 @@ with strategy.scope():
                 tf.keras.layers.Softmax()])
 
     # Display the first test image
-    termshow.show(test_images[0].transpose())
+    termshow.show(test_images[0])
 
     # Generate probabilities for the set of test images
     predictions = probability_model.predict(test_images, batch_size=10)
