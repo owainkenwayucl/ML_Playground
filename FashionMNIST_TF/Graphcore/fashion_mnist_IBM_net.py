@@ -87,6 +87,8 @@ cfg.configure_ipu_system()
 # Create an IPU distribution strategy.
 strategy = ipu.ipu_strategy.IPUStrategy()
 
+assert train_images.shape == (60000, 28, 28)
+
 with strategy.scope():
 
     # Set up layers     
