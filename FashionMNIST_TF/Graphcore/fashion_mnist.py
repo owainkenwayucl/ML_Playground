@@ -1,7 +1,7 @@
 # Based on the Tensorflow examples which have confusing licensing.
 
 # Assume this is under the appropriate license (Apache and/or MIT), 
-# converted from Jupyter Notebook by Owain Kenway
+# converted from Jupyter Notebook + ported to Graphcore by Owain Kenway
 
 # Original license statement is here:
 # https://github.com/tensorflow/docs/blob/master/site/en/tutorials/keras/classification.ipynb

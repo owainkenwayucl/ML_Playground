@@ -72,7 +72,9 @@ class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
 train_images = train_images / 255.0
 test_images = test_images / 255.0
 
-assert train_images.shape == (60000, 28, 28)
+# Fix shapes to match Graphcore.
+train_images = train_images[..., np.newaxis]
+test_images = test_images[..., np.newaxis]
 
 # This network is from the IBM example
 model = tf.keras.Sequential([

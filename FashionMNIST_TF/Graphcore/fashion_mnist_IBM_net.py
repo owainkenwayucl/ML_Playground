@@ -1,7 +1,7 @@
 # Based on the Tensorflow examples which have confusing licensing.
 
 # Assume this is under the appropriate license (Apache and/or MIT), 
-# converted from Jupyter Notebook by Owain Kenway
+# converted from Jupyter Notebook + ported to Graphcore by Owain Kenway
 
 # This version has the more complicated network from the IBM example:
 # https://github.com/IBM/ibmz-accelerated-for-tensorflow/blob/main/samples/fashion-mnist/fashion_mnist_training.py
@@ -87,7 +87,9 @@ cfg.configure_ipu_system()
 # Create an IPU distribution strategy.
 strategy = ipu.ipu_strategy.IPUStrategy()
 
-assert train_images.shape == (60000, 28, 28)
+# Fix shapes as this old version of TF needs an extra dim.
+train_images = train_images[..., np.newaxis]
+test_images = test_images[..., np.newaxis]
 
 with strategy.scope():
 
