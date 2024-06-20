@@ -29,7 +29,7 @@ data_class = getattr(medmnist, info["python_class"])
 
 data_transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize(mean=[0.5], std[0.5])
+    torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
 train = data_class(split="train", transform=data_transform, download=True)
