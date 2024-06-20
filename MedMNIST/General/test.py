@@ -77,7 +77,7 @@ class classification_model(torch.nn.Module):
         )
 
         self.l5 = torch.nn.Sequential(
-            torch.nn.Conv2d(64, 64, kernel_size=3),
+            torch.nn.Conv2d(64, 64, kernel_size=3, padding=1),
             torch.nn.BatchNorm2d(64),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(kernel_size=2, stride=2)
