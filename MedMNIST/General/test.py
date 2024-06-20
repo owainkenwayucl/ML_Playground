@@ -41,7 +41,7 @@ test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_s
 print(train)
 print(test)
 
-class classification_model(nn.Module):
+class classification_model(torch.nn.Module):
     def __init__(self, in_channels, num_classes):
         super(ClassificationModel, self).__init__()
 
