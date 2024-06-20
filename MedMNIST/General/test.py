@@ -78,7 +78,7 @@ class classification_model(torch.nn.Module):
         )
 
         self.l6 = torch.nn.Sequential(
-            torch.nn.Linear(64 * 4 * 4 * 128),
+            torch.nn.Linear(64 * 4 * 4, 128),
             torch.nn.ReLU(),
             torch.nn.Linear(128, 128),
             torch.nn.ReLU(),
