@@ -5,6 +5,7 @@
 
 import numpy
 import torch
+import torch.nn
 import torch.utils.data
 import torchvision.transforms
 
@@ -39,3 +40,59 @@ test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_s
 
 print(train)
 print(test)
+
+class classification_model(nn.Module):
+    def __init__(self, in_channels, num_classes):
+        super(ClassificationModel, self).__init__()
+
+        self.l1 = torch.nn.Sequential(
+            torch.nn.Conv2d(in_channels, 16, kernel_size=3),
+            torch.nn.BatchNorm2d(16),
+            torch.nn.ReLU()
+        )
+
+        self.l2 = torch.nn.Sequential(
+            torch.nn.Conv2d(16, 16, kernel_size=3),
+            torch.nn.BatchNorm2d(16),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+
+        self.l3 = torch.nn.Sequential(
+            torch.nn.Conv2d(16, 64, kernel_size=3),
+            torch.nn.BatchNorm2d(64),
+            torch.nn.ReLU()
+        )
+
+        self.l4 = torch.nn.Sequential(
+            torch.nn.Conv2d(64, 64, kernel_size=3),
+            torch.nn.BatchNorm2d(64),
+            torch.nn.ReLU()
+        )
+
+        self.l5 = torch.nn.Sequential(
+            torch.nn.Conv2d(64, 64, kernel_size=3),
+            torch.nn.BatchNorm2d(64),
+            torch.nn.ReLU(),
+            torch.nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+
+        self.l6 = torch.nn.Sequential(
+            torch.nn.Linear(64 * 4 * 4 * 128),
+            torch.nn.ReLU(),
+            torch.nn.Linear(128, 128),
+            torch.nn.ReLU(),
+            torch.nn.Linear(128, num_classes)
+        )
+
+    def forward(self, input_):
+        input_ = self.l1(input_)
+        input_ = self.l2(input_)
+        input_ = self.l3(input_)
+        input_ = self.l4(input_)
+        input_ = self.l5(input_)
+        input_ = input_.view(input_.size(0), -1)
+        input_ = self.l6(input_)
+        return input_
+
+model = classification_model(in_channels = n_channels, num_classes=n_classes)
