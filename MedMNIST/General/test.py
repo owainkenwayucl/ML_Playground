@@ -23,6 +23,8 @@ num_epochs = 10
 
 batch_size = 128
 
+lr = 0.001
+
 info = medmnist.INFO[dataset]
 task = info["task"]
 
