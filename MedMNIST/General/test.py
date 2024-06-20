@@ -43,7 +43,7 @@ print(test)
 
 class classification_model(torch.nn.Module):
     def __init__(self, in_channels, num_classes):
-        super(ClassificationModel, self).__init__()
+        super(classification_model, self).__init__()
 
         self.l1 = torch.nn.Sequential(
             torch.nn.Conv2d(in_channels, 16, kernel_size=3),
