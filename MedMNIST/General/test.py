@@ -7,13 +7,17 @@ import numpy
 import torch
 import torch.nn
 import torch.utils.data
+import torch.optim
 import torchvision.transforms
+import tqdm
 
 import medmnist
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 dataset = "pathmnist"
+
+mlbc = "multi-label, binary-class"
 
 num_epochs = 10
 
@@ -96,3 +100,31 @@ class classification_model(torch.nn.Module):
         return input_
 
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
+
+if task == mlbc:
+    criterion = torch.nn.BCEWithLogitsLoss()
+else:
+    criterion = torch.nn.CrossEntropyLoss()
+    
+optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+
+for epoch in range(num_epochs):
+    train_correct = 0
+    train_total = 0
+    test_correct = 0
+    test_total = 0
+
+    model.train()
+
+    for inputs, targets in tqdm.tqdm(train_dataloader):
+        optimiser.zero_grad()
+        outputs = model(inputs)
+
+        if task == mlbc:
+            targets = targets.to(torch.float32)
+        else:
+            targets = targets.squeeze().long()
+
+        loss = criterion(outputs, targets)
+        loss.backward()
+        optimiser.step()
