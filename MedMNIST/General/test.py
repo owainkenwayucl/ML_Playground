@@ -9,7 +9,6 @@ import torch.utils.data
 import torchvision.transforms
 
 import medmnist
-import medmnist.INFO
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
