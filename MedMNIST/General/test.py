@@ -111,11 +111,6 @@ else:
 optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
 for epoch in range(num_epochs):
-    train_correct = 0
-    train_total = 0
-    test_correct = 0
-    test_total = 0
-
     model.train()
 
     for inputs, targets in tqdm.tqdm(train_dataloader):
@@ -130,3 +125,28 @@ for epoch in range(num_epochs):
         loss = criterion(outputs, targets)
         loss.backward()
         optimiser.step()
+
+model.eval()
+guess_true = torch.tensor([])
+guess_score = torch.tensor([])
+
+with torch.no_grad():
+    for inputs, targets in test_dataloader:
+        outputs = model(inputs)
+
+        if task == mlbc:
+            targets = targets.to(torch.float32)
+        else:
+            targets = targets.squeeze().long()
+            targets = targets.float().resize_(len(targets), 1)
+
+        outputs = outputs.softmax(dim=-2)
+
+        guess_true = torch.cat((guess_true, targets),0)
+        guess_score = torch.cat((guess_score, outputs),0)
+
+evaluator = medmnist.Evaluator(dataset, "test")
+metrics = evaluator.evaluate(guess_score)
+
+print(metrics)
+
