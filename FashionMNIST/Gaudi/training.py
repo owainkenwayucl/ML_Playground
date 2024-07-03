@@ -63,7 +63,9 @@ for epoch in tqdm(range(epochs), desc="epochs"):
 
 cpu_model = model.to("cpu")
 torch.save(cpu_model.state_dict(), "fashion_classifier.pth")
-
+cpu_model = ClassificationModel()
+cpu_model.load_state_dict(torch.load("fashion_classifier.pth"))
+cpu_model.eval()
 
 print("\nDoing Inference... \n")
 
