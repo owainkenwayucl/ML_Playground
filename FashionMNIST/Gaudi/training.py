@@ -36,7 +36,7 @@ class ClassificationModel(torch.nn.Module):
 model = ClassificationModel()
 
 train_dataloader = torch.utils.data.DataLoader(
-    opts, train_dataset, batch_size=16, shuffle=True, num_workers=20
+    train_dataset, batch_size=16, shuffle=True, num_workers=20
 )
 
 optimiser = torch.optim.Adam(model.parameters(), lr=0.001, momentum=0.9)
@@ -63,7 +63,7 @@ print("\nDoing Inference... \n")
 
 model = model.eval()
 
-test_dataloader = torch.utils.data.DataLoader(opts, test_dataset, batch_size=32, num_workers=10)
+test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=32, num_workers=10)
 
 predictions, labels = [], []
 for data, label in test_dataloader:
