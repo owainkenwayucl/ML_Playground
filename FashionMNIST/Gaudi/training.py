@@ -116,7 +116,7 @@ print('Image:')
 show(x[0], colours=ANSI_COLOURS)
 
 print(f"Label: {classes[labels[0]]} Prediction: {classes[predictions[0]]}")
-print(f"Prediction accuracy over training set: {percentage}% ")
+print(f"Prediction accuracy over test set: {percentage}% ({count_samples} images)")
 
 # ONNX
 gibberish = torch.randn(1, 1, 28, 28, requires_grad=True)
