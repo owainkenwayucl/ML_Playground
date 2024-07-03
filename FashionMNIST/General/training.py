@@ -48,15 +48,14 @@ optimiser = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion = torch.nn.CrossEntropyLoss()
 
 model = model.to(device)
-model_h = torch.compile(model)
 
 epochs = 5
 for epoch in tqdm(range(epochs), desc="epochs"):
-    model_h.train()
+    model.train()
     for images, labels in train_dataloader:
         images, labels = images.to(device), labels.to(device)
         optimiser.zero_grad()
-        outputs = model_h(images)
+        outputs = model(images)
         loss = criterion(outputs, labels)
         loss.backward()
         optimiser.step()
