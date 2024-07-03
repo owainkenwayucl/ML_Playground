@@ -21,7 +21,10 @@ def inference(image_data):
     imageset = []
     imageset.append(images)
     output = {}
+    inf_start = time.time()
     output["output"] = session.run(imageset)
+    inf_stop = time.time()
+    print(f"Time in inference: {inf_stop - inf_start}")
 
     return output
 
