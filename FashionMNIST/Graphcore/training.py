@@ -9,6 +9,13 @@ import onnx
 import onnxruntime
 import numpy
 
+import time
+import json
+
+timing = {}
+timing["training"] = {}
+timing["inference"] = {}
+
 train_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=True)
 test_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=False)
 
@@ -41,6 +48,9 @@ class ClassificationModel(nn.Module):
 
 
 model = ClassificationModel()
+
+timing["training"]["start"] = time.time()
+
 model.train()
 
 opts = poptorch.Options()
@@ -55,19 +65,25 @@ poptorch_model = poptorch.trainingModel(model, options=opts, optimizer=optimiser
 
 epochs = 5
 for epoch in tqdm(range(epochs), desc="epochs"):
+    epoch_start = time.time()
     total_loss = 0.0
     for data, labels in tqdm(train_dataloader, desc="batches", leave=False):
         output, loss = poptorch_model(data, labels)
         total_loss += loss
+    epoch_finish = time.time()
+    timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
 
 poptorch_model.detachFromDevice()
+
+timing["training"]["finish"] = time.time()
+timing["training"]["duration"] = timing["training"]["finish"] - timing["training"]["start"] 
 
 torch.save(model.state_dict(), "fashion_classifier.pth")
 
 # Inference
 
 print("\nDoing Inference... \n")
-
+timing["inference"]["start"] = time.time()
 model = model.eval()
 
 poptorch_model_inf = poptorch.inferenceModel(model, options=opts)
@@ -80,6 +96,9 @@ for data, label in test_dataloader:
     labels += label
 
 poptorch_model_inf.detachFromDevice()
+
+timing["inference"]["finish"] = time.time()
+timing["inference"]["duration"] = timing["inference"]["finish"] - timing["inference"]["start"] 
 
 count_samples = len(labels)
 correct = 0
@@ -136,3 +155,5 @@ ort_outs = ort_session.run(None, ort_inputs)
 numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03, atol=1e-05)
 
 print("Exported model has been tested with ONNXRuntime, and the result looks good!")
+
+print(json.dumps(timing, indent=4))
