@@ -49,9 +49,9 @@ train_dataloader = poptorch.DataLoader(
     opts, train_dataset, batch_size=16, shuffle=True, num_workers=20
 )
 
-optimizer = poptorch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+optimiser = poptorch.optim.Adam(model.parameters(), lr=0.001)
 
-poptorch_model = poptorch.trainingModel(model, options=opts, optimizer=optimizer)
+poptorch_model = poptorch.trainingModel(model, options=opts, optimizer=optimiser)
 
 epochs = 5
 for epoch in tqdm(range(epochs), desc="epochs"):
