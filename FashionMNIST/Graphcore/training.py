@@ -5,6 +5,9 @@ import poptorch
 import torchvision
 import torch.nn as nn
 from tqdm import tqdm
+import onnx
+import onnxruntime
+import numpy
 
 train_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=True)
 test_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=False)
@@ -78,8 +81,15 @@ for data, label in test_dataloader:
 
 poptorch_model_inf.detachFromDevice()
 
-for a in range(len(labels)):
+count_samples = len(labels)
+correct = 0
+
+for a in range(count_samples):
+    if labels[a] == predictions[a]:
+        correct += 1
     print(f"Label: {classes[labels[a]]} Prediction: {classes[predictions[a]]}")
+
+percentage = 100 * (correct/count_samples)
 
 print("\nThe Famous Ankle Boot Test!\n")
 
@@ -91,6 +101,7 @@ print('Image:')
 show(x[0], colours=ANSI_COLOURS)
 
 print(f"Label: {classes[labels[0]]} Prediction: {classes[predictions[0]]}")
+print(f"Prediction accuracy over training set: {percentage}% ")
 
 # ONNX
 gibberish = torch.randn(1, 1, 28, 28, requires_grad=True)
@@ -106,12 +117,11 @@ onnx_out_model = torch.onnx.export(model,
                                              'output' : {0 : 'batch_size'}})
 
 print("Checking with ONNX")
-import onnx
+
 onnx_model = onnx.load(onnx_file)
 
 print("Checking with ONNX Runtime")
-import onnxruntime
-import numpy as np
+
 
 ort_session = onnxruntime.InferenceSession(onnx_file, providers=["CPUExecutionProvider"])
 
@@ -123,6 +133,6 @@ ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(gibberish)}
 ort_outs = ort_session.run(None, ort_inputs)
 
 # compare ONNX Runtime and PyTorch results
-np.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03, atol=1e-05)
+numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03, atol=1e-05)
 
 print("Exported model has been tested with ONNXRuntime, and the result looks good!")
