@@ -39,7 +39,7 @@ train_dataloader = torch.utils.data.DataLoader(
     train_dataset, batch_size=16, shuffle=True, num_workers=20
 )
 
-optimiser = torch.optim.Adam(model.parameters(), lr=0.001, momentum=0.9)
+optimiser = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion = torch.nn.CrossEntropyLoss()
 
 model = model.to("hpu")
