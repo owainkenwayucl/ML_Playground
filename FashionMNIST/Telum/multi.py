@@ -1,12 +1,15 @@
 from PyRuntime import OMExecutionSession
 import json
 import numpy as np
+import time
+
 model = "fashion_MNIST/fashion_classifier.so"
 
 convert_types = {"f32":"float32",
                  "f16":"float16"}
 
 def inference(image_data):
+    setup_start = time.time()
     session = OMExecutionSession(model)
     input_signature_json = json.loads(session.input_signature())
     signature = input_signature_json[0]
@@ -20,6 +23,8 @@ def inference(image_data):
             images = np.concatenate((images, image), axis=0)
     imageset = []
     imageset.append(images)
+    setup_stop = time.time()
+    print(f"Time in setup: {setup_stop - setup_start}")
     output = {}
     inf_start = time.time()
     output["output"] = session.run(imageset)
@@ -30,7 +35,6 @@ def inference(image_data):
 
 def main():
     import sys
-    import time
     from imageio import readpgm
     from termshow import show, ANSI_COLOURS
 
