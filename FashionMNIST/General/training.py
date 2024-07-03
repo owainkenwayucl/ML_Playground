@@ -5,6 +5,13 @@ import onnx
 import onnxruntime
 import numpy
 
+import time
+import json
+
+timing = {}
+timing["training"] = {}
+timing["inference"] = {}
+
 train_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=True)
 test_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=False)
 
@@ -47,10 +54,13 @@ train_dataloader = torch.utils.data.DataLoader(
 optimiser = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion = torch.nn.CrossEntropyLoss()
 
+timing["training"]["start"] = time.time()
+
 model = model.to(device)
 
 epochs = 5
 for epoch in tqdm(range(epochs), desc="epochs"):
+    epoch_start = time.time()
     model.train()
     for images, labels in train_dataloader:
         images, labels = images.to(device), labels.to(device)
@@ -59,12 +69,19 @@ for epoch in tqdm(range(epochs), desc="epochs"):
         loss = criterion(outputs, labels)
         loss.backward()
         optimiser.step()
+    epoch_finish = time.time()
+    timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
 
 cpu_model = model.to("cpu")
+
+timing["training"]["finish"] = time.time()
+timing["training"]["duration"] = timing["training"]["finish"] - timing["training"]["start"] 
+
 torch.save(cpu_model.state_dict(), "fashion_classifier.pth")
 
 print("\nDoing Inference... \n")
 
+timing["inference"]["start"] = time.time()
 model = model.eval()
 
 test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=32, num_workers=10)
@@ -73,6 +90,9 @@ predictions, labels = [], []
 for data, label in test_dataloader:
     predictions += model(data).data.max(dim=1).indices
     labels += label
+
+timing["inference"]["finish"] = time.time()
+timing["inference"]["duration"] = timing["inference"]["finish"] - timing["inference"]["start"] 
 
 count_samples = len(labels)
 correct = 0
@@ -128,3 +148,5 @@ ort_outs = ort_session.run(None, ort_inputs)
 numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03, atol=1e-05)
 
 print("Exported model has been tested with ONNXRuntime, and the result looks good!")
+
+print(json.dumps(timing, indent=4))
