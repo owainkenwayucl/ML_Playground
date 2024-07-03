@@ -42,7 +42,7 @@ train_dataloader = torch.utils.data.DataLoader(
 optimiser = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion = torch.nn.CrossEntropyLoss()
 
-model = model.to("hpu")
+model = model.to(device)
 model = torch.compile(model,backend="hpu_backend")
 
 epochs = 5
@@ -56,7 +56,8 @@ for epoch in tqdm(range(epochs), desc="epochs"):
         loss.backward()
         optimiser.step()
 
-torch.save(model.state_dict(), "fashion_classifier.pth")
+cpu_model = model.to("cpu")
+torch.save(cpu_model.state_dict(), "fashion_classifier.pth")
 
 
 print("\nDoing Inference... \n")
@@ -70,8 +71,15 @@ for data, label in test_dataloader:
     predictions += model(data).data.max(dim=1).indices
     labels += label
 
-for a in range(len(labels)):
+count_samples = len(labels)
+correct = 0
+
+for a in range(count_samples):
+    if labels[a] == predictions[a]:
+        correct += 1
     print(f"Label: {classes[labels[a]]} Prediction: {classes[predictions[a]]}")
+
+percentage = 100 * (correct/count_samples)
 
 print("\nThe Famous Ankle Boot Test!\n")
 
@@ -83,5 +91,5 @@ print('Image:')
 show(x[0], colours=ANSI_COLOURS)
 
 print(f"Label: {classes[labels[0]]} Prediction: {classes[predictions[0]]}")
-
+print(f"Prediction accuracy over training set: {percentage}% ")
 
