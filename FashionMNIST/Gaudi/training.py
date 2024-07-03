@@ -151,4 +151,4 @@ numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03
 
 print("Exported model has been tested with ONNXRuntime, and the result looks good!")
 
-print(json.dumps(json.loads(timing), indent=4))
+print(json.dumps(timing, indent=4))
