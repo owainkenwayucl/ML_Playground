@@ -48,18 +48,19 @@ optimiser = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion = torch.nn.CrossEntropyLoss()
 
 model = model.to(device)
-model_h = torch.compile(model,backend="hpu_backend")
 
 epochs = 5
 for epoch in tqdm(range(epochs), desc="epochs"):
-    model_h.train()
+    model.train()
     for images, labels in train_dataloader:
         images, labels = images.to(device), labels.to(device)
         optimiser.zero_grad()
-        outputs = model_h(images)
+        outputs = model(images)
         loss = criterion(outputs, labels)
         loss.backward()
+        htcore.mark_step()
         optimiser.step()
+        htcore.mark_step()
 
 cpu_model = model.to("cpu")
 torch.save(cpu_model.state_dict(), "fashion_classifier.pth")
@@ -73,6 +74,7 @@ test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=32, num_w
 predictions, labels = [], []
 for data, label in test_dataloader:
     predictions += model(data).data.max(dim=1).indices
+    htcore.mark_step()
     labels += label
 
 count_samples = len(labels)
