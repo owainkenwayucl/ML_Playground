@@ -102,7 +102,7 @@ with torch.no_grad():
         guess_true = torch.cat((guess_true, targets),0)
         guess_score = torch.cat((guess_score, outputs),0)
 
-evaluator = medmnist.Evaluator(dataset, "test")
+evaluator = medmnist.Evaluator(dataset, "test", size=224)
 metrics = evaluator.evaluate(guess_score)
 
 print(metrics)
