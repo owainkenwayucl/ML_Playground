@@ -133,13 +133,16 @@ for epoch in range(num_epochs):
         optimiser.step()
         htcore.mark_step()
 
+# Do inference on CPU
+
+model = model.to("cpu")
+
 model.eval()
 guess_true = torch.tensor([])
 guess_score = torch.tensor([])
 
 with torch.no_grad():
     for inputs, targets in test_dataloader:
-        inputs = inputs.to(device)
         outputs = model(inputs)
         htcore.mark_step()
         if task == mlbc:
