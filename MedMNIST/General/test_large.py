@@ -56,7 +56,7 @@ print(test)
 
 
 
-model = torch.models.resnet18(num_classes=n_classes)
+model = torchvision.models.resnet18(num_classes=n_classes)
 model.to(device)
 
 if task == mlbc:
