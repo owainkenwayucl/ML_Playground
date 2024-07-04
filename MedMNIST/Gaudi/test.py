@@ -12,6 +12,7 @@ import torchvision.transforms
 import tqdm
 
 import habana_frameworks.torch.core as htcore
+device = torch.device("hpu")
 
 import medmnist
 
@@ -104,7 +105,7 @@ class classification_model(torch.nn.Module):
         return input_
 
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
-model.to("hpu")
+model.to(device)
 
 if task == mlbc:
     criterion = torch.nn.BCEWithLogitsLoss()
@@ -117,6 +118,7 @@ for epoch in range(num_epochs):
     model.train()
 
     for inputs, targets in tqdm.tqdm(train_dataloader):
+        inputs, targets = inputs.to(device), targets.to(device)
         optimiser.zero_grad()
         outputs = model(inputs)
 
@@ -137,6 +139,7 @@ guess_score = torch.tensor([])
 
 with torch.no_grad():
     for inputs, targets in test_dataloader:
+        inputs, targets = inputs.to(device), targets.to(device)
         outputs = model(inputs)
         htcore.mark_step()
         if task == mlbc:
