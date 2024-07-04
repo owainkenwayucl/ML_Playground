@@ -139,7 +139,7 @@ guess_score = torch.tensor([])
 
 with torch.no_grad():
     for inputs, targets in test_dataloader:
-        inputs, targets = inputs.to(device), targets.to(device)
+        inputs = inputs.to(device)
         outputs = model(inputs)
         htcore.mark_step()
         if task == mlbc:
