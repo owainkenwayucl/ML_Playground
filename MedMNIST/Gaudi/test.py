@@ -139,7 +139,7 @@ guess_score = torch.tensor([])
 
 with torch.no_grad():
     for inputs, targets in test_dataloader:
-        inputs = inputs.to("hpu")
+        inputs = inputs.to(device)
         outputs = model(inputs).to("cpu")
         htcore.mark_step()
         if task == mlbc:
