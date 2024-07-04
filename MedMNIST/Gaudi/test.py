@@ -104,6 +104,7 @@ class classification_model(torch.nn.Module):
         return input_
 
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
+model.to("hpu")
 
 if task == mlbc:
     criterion = torch.nn.BCEWithLogitsLoss()
