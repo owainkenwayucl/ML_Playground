@@ -116,7 +116,7 @@ else:
     
 optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
-poptorch_model = poptorch.trainingModel(model, Options=opts, optimizer=optimiser)
+poptorch_model = poptorch.trainingModel(model, options=opts, optimizer=optimiser)
 
 for epoch in range(num_epochs):
     model.train()
