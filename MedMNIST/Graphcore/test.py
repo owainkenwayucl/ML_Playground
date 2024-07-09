@@ -127,6 +127,8 @@ for epoch in range(num_epochs):
             targets = targets.to(torch.float32)
         else:
             targets = targets.squeeze().long()
+        inputs = inputs.to("ipu")
+        lables = lables.to("ipu")
         _, loss = poptorch_model(inputs, targets)
 
 model.eval()
