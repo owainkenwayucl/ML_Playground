@@ -123,10 +123,8 @@ for epoch in range(num_epochs):
     model.train()
 
     for inputs, targets in tqdm.tqdm(train_dataloader):
-        if task == mlbc:
-            targets = targets.to(torch.float32)
-        else:
-            targets = targets.squeeze().long()
+        targets = targets.to(torch.float32)
+
         inputs = inputs.to("ipu")
         targets = targets.to("ipu")
         _, loss = poptorch_model(inputs, targets)
