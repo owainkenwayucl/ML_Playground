@@ -41,6 +41,11 @@ data_transform = torchvision.transforms.Compose([
     torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
+if task == mlbc:
+    criterion = torch.nn.BCEWithLogitsLoss()
+else:
+    criterion = torch.nn.CrossEntropyLoss()
+
 train = data_class(split="train", transform=data_transform, download=True)
 test = data_class(split="test", transform=data_transform, download=True)
 
@@ -102,17 +107,13 @@ class classification_model(torch.nn.Module):
         input_ = self.l5(input_)
         input_ = input_.view(input_.size(0), -1)
         input_ = self.l6(input_)
+        loss = 
         if self.training:
-            return input_, self.loss(input_, labels)
+            return input_, criterion(input_, targets)
         return input_
 
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
 
-
-if task == mlbc:
-    criterion = torch.nn.BCEWithLogitsLoss()
-else:
-    criterion = torch.nn.CrossEntropyLoss()
     
 optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
