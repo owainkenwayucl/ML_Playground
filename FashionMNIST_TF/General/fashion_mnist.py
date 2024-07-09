@@ -51,8 +51,6 @@ import termshow
 import sys
 import time 
 
-from tensorflow.python import ipu
-
 print(tf.__version__)
 
 # Get the dataset
