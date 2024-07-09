@@ -128,7 +128,7 @@ for epoch in range(num_epochs):
         else:
             targets = targets.squeeze().long()
         inputs = inputs.to("ipu")
-        lables = lables.to("ipu")
+        lables = labels.to("ipu")
         _, loss = poptorch_model(inputs, targets)
 
 model.eval()
