@@ -14,6 +14,8 @@ import tqdm
 
 import medmnist
 
+opts = poptorch.Options()
+
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 dataset = "pathmnist"
@@ -42,8 +44,8 @@ data_transform = torchvision.transforms.Compose([
 train = data_class(split="train", transform=data_transform, download=True)
 test = data_class(split="test", transform=data_transform, download=True)
 
-train_dataloader = poptorch.DataLoader(dataset=train, batch_size = batch_size, shuffle=True)
-test_dataloader = poptorch.DataLoader(dataset=test, batch_size = batch_size, shuffle=False)
+train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True)
+test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False)
 
 print(train)
 print(test)
@@ -105,7 +107,7 @@ class classification_model(torch.nn.Module):
         return input_
 
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
-opts = poptorch.Options()
+
 
 if task == mlbc:
     criterion = torch.nn.BCEWithLogitsLoss()
