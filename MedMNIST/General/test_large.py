@@ -12,6 +12,12 @@ import torchvision.models
 import torchvision.transforms
 import tqdm
 
+import time
+import json
+
+timing = {}
+timing["training"] = {}
+timing["inference"] = {}
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
@@ -57,6 +63,9 @@ print(test)
 
 
 model = torchvision.models.resnet18(num_classes=n_classes)
+
+timing["training"]["start"] = time.time()
+
 model.to(device)
 
 if task == mlbc:
@@ -67,6 +76,7 @@ else:
 optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
 for epoch in range(num_epochs):
+    epoch_start = time.time()
     model.train()
 
     for inputs, targets in tqdm.tqdm(train_dataloader):
@@ -82,6 +92,13 @@ for epoch in range(num_epochs):
         loss = criterion(outputs, targets)
         loss.backward()
         optimiser.step()
+    epoch_finish = time.time()
+    timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
+
+timing["training"]["finish"] = time.time()
+timing["training"]["duration"] = timing["training"]["finish"] - timing["training"]["start"] 
+
+timing["inference"]["start"] = time.time()
 
 model.eval()
 guess_true = torch.tensor([])
@@ -102,8 +119,13 @@ with torch.no_grad():
         guess_true = torch.cat((guess_true, targets),0)
         guess_score = torch.cat((guess_score, outputs),0)
 
+timing["inference"]["finish"] = time.time()
+timing["inference"]["duration"] = timing["inference"]["finish"] - timing["inference"]["start"] 
+
 evaluator = medmnist.Evaluator(dataset, "test", size=224)
 metrics = evaluator.evaluate(guess_score)
 
 print(metrics)
+
+print(json.dumps(timing, indent=4))
 
