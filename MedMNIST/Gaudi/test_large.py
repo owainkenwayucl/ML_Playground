@@ -17,6 +17,13 @@ device = torch.device("hpu")
 
 import medmnist
 
+import time
+import json
+
+timing = {}
+timing["training"] = {}
+timing["inference"] = {}
+
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 dataset = "pathmnist"
@@ -54,6 +61,9 @@ print(test)
 
 
 model = torchvision.models.resnet18(num_classes=n_classes)
+
+timing["training"]["start"] = time.time()
+
 model.to(device)
 
 if task == mlbc:
@@ -67,6 +77,7 @@ for epoch in range(num_epochs):
     model.train()
 
     for inputs, targets in tqdm.tqdm(train_dataloader):
+        epoch_start = time.time()
         inputs, targets = inputs.to(device), targets.to(device)
         optimiser.zero_grad()
         outputs = model(inputs)
@@ -81,6 +92,13 @@ for epoch in range(num_epochs):
         htcore.mark_step()
         optimiser.step()
         htcore.mark_step()
+        epoch_finish = time.time()
+    timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
+
+timing["training"]["finish"] = time.time()
+timing["training"]["duration"] = timing["training"]["finish"] - timing["training"]["start"] 
+
+timing["inference"]["start"] = time.time()
 
 model.eval()
 guess_true = torch.tensor([])
@@ -102,8 +120,14 @@ with torch.no_grad():
         guess_true = torch.cat((guess_true, targets),0)
         guess_score = torch.cat((guess_score, outputs),0)
 
+
+timing["inference"]["finish"] = time.time()
+timing["inference"]["duration"] = timing["inference"]["finish"] - timing["inference"]["start"] 
+
 evaluator = medmnist.Evaluator(dataset, "test", size=224)
 metrics = evaluator.evaluate(guess_score)
 
 print(metrics)
+
+print(json.dumps(timing, indent=4))
 
