@@ -75,9 +75,9 @@ optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
 for epoch in range(num_epochs):
     model.train()
-
+    epoch_start = time.time()
     for inputs, targets in tqdm.tqdm(train_dataloader):
-        epoch_start = time.time()
+        
         inputs, targets = inputs.to(device), targets.to(device)
         optimiser.zero_grad()
         outputs = model(inputs)
@@ -92,7 +92,7 @@ for epoch in range(num_epochs):
         htcore.mark_step()
         optimiser.step()
         htcore.mark_step()
-        epoch_finish = time.time()
+    epoch_finish = time.time()
     timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
 
 timing["training"]["finish"] = time.time()
