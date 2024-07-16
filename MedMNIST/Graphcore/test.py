@@ -120,15 +120,10 @@ model = classification_model(in_channels = n_channels, num_classes=n_classes)
 optimiser = poptorch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
 poptorch_model = poptorch.trainingModel(model, options=opts, optimizer=optimiser)
+model.train()
 
 for epoch in range(num_epochs):
-    model.train()
-
     for inputs, targets in tqdm.tqdm(train_dataloader):
-        targets = targets.to(torch.float32)
-
-        inputs = inputs.to("ipu")
-        targets = targets.to("ipu")
         _, loss = poptorch_model(inputs, targets)
 
 model.eval()
