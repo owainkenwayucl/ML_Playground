@@ -124,6 +124,7 @@ model.train()
 
 for epoch in range(num_epochs):
     for inputs, targets in tqdm.tqdm(train_dataloader):
+        targets = targets.squeeze()
         _, loss = poptorch_model(inputs, targets)
 
 model.eval()
