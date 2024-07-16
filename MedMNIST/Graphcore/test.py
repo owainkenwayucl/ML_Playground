@@ -28,7 +28,7 @@ num_epochs = 10
 
 # Well this is problematic. There's a bug in poptorch's dataloaders which means
 # that it only loads integer x batches of data.
-training_batch_size = 22499
+training_batch_size = 256 # not using all training data - losing 89996 % batch size data
 inference_batch_size = 359
 lr = 0.001
 
