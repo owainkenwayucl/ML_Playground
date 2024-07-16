@@ -102,7 +102,7 @@ class classification_model(torch.nn.Module):
         )
         self.loss = criterion
 
-    def forward(self, input_, labels):
+    def forward(self, input_, labels=None):
         input_ = self.l1(input_)
         input_ = self.l2(input_)
         input_ = self.l3(input_)
