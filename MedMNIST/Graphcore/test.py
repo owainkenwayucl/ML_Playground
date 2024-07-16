@@ -111,7 +111,7 @@ class classification_model(torch.nn.Module):
         input_ = input_.view(input_.size(0), -1)
         input_ = self.l6(input_)
         if self.training:
-            return input_, self.loss(input_, targets)
+            return input_, self.loss(input_, labels)
         return input_
 
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
