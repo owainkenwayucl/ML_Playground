@@ -26,7 +26,7 @@ mlbc = "multi-label, binary-class"
 
 num_epochs = 10
 
-batch_size = 128
+batch_size = 16
 
 lr = 0.001
 
@@ -51,7 +51,7 @@ else:
 train = data_class(split="train", transform=data_transform, download=True)
 test = data_class(split="test", transform=data_transform, download=True)
 
-train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True)
+train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True, num_workers=20)
 test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False)
 
 print(train)
@@ -117,7 +117,7 @@ class classification_model(torch.nn.Module):
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
 
     
-optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+optimiser = poptorch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
 poptorch_model = poptorch.trainingModel(model, options=opts, optimizer=optimiser)
 
