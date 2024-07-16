@@ -24,10 +24,7 @@ mlbc = "multi-label, binary-class"
 
 num_epochs = 10
 
-# Well this is problematic. There's a bug in poptorch's dataloaders which means
-# that it only loads integer x batches of data.
-training_batch_size = 256 # not using all training data - losing 89996 % batch size data
-inference_batch_size = 359
+batch_size = 256 
 lr = 0.001
 
 info = medmnist.INFO[dataset]
@@ -51,8 +48,8 @@ else:
 train = data_class(split="train", transform=data_transform, download=True)
 test = data_class(split="test", transform=data_transform, download=True)
 
-train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = training_batch_size, shuffle=True, num_workers=20)
-test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = inference_batch_size, shuffle=False)
+train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True, num_workers=20, drop_last = False)
+test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False, drop_last = False)
 
 print(train)
 print(test)
