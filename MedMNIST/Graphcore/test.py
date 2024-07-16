@@ -100,7 +100,7 @@ class classification_model(torch.nn.Module):
             torch.nn.ReLU(),
             torch.nn.Linear(128, num_classes)
         )
-        self.loss = criterion()
+        self.loss = criterion
 
     def forward(self, input_, labels):
         input_ = self.l1(input_)
