@@ -26,8 +26,10 @@ mlbc = "multi-label, binary-class"
 
 num_epochs = 10
 
-batch_size = 16
-
+# Well this is problematic. There's a bug in poptorch's dataloaders which means
+# that it only loads integer x batches of data.
+training_batch_size = 22499
+inference_batch_size = 359
 lr = 0.001
 
 info = medmnist.INFO[dataset]
@@ -51,8 +53,8 @@ else:
 train = data_class(split="train", transform=data_transform, download=True)
 test = data_class(split="test", transform=data_transform, download=True)
 
-train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True, num_workers=20)
-test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False)
+train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = training_batch_size, shuffle=True, num_workers=20)
+test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = inference_batch_size, shuffle=False)
 
 print(train)
 print(test)
@@ -124,7 +126,10 @@ model.train()
 
 for epoch in range(num_epochs):
     for inputs, targets in tqdm.tqdm(train_dataloader):
-        targets = targets.squeeze()
+        if task == mlbc:
+            targets = targets.to(torch.float32)
+        else:
+            targets = targets.squeeze().long()
         _, loss = poptorch_model(inputs, targets)
 
 model.eval()
