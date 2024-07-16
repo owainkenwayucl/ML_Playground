@@ -3,8 +3,6 @@
 
 # Converted to a script by Dr Owain Kenway, Summer 2024
 
-# Presently doesn't work with weird poptorch internal errors :(
-
 import numpy
 import torch
 import torch.nn
