@@ -38,6 +38,11 @@ num_epochs = 10
 train_batch_size = 149
 inference_batch_size = 359
 
+if len(sys.argv) > 1:
+	batch_size = int(sys.argv[1])
+    train_batch_size = batch_size
+    inference_batch_size = batch_size
+
 lr = 0.001
 
 info = medmnist.INFO[dataset]
