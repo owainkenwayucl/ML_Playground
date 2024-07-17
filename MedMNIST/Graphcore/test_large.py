@@ -24,6 +24,9 @@ timing["inference"] = {}
 
 opts = poptorch.Options()
 
+n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 4))
+opt.replicationFactor(n_ipu)
+
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 dataset = "pathmnist"
