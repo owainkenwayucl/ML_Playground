@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     num_epochs = 10
 
-    batch_size = 256 
+    batch_size = 4
     lr = 0.001
 
     info = medmnist.INFO[dataset]
@@ -49,8 +49,8 @@ if __name__ == '__main__':
     train = data_class(split="train", transform=data_transform, download=True)
     test = data_class(split="test", transform=data_transform, download=True)
 
-    train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True, drop_last=False, num_workers=20, mode=poptorch.DataLoaderMode.AsyncRebatched)
-    test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False, drop_last=False, mode=poptorch.DataLoaderMode.AsyncRebatched)
+    train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True, drop_last=False, num_workers=20)
+    test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False, drop_last=False)
 
     print(train)
     print(test)
