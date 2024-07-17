@@ -17,6 +17,7 @@ import medmnist
 import time
 import json
 import sys
+import os 
 
 timing = {}
 timing["training"] = {}
