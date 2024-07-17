@@ -2,12 +2,12 @@ import torch
 import poptorch
 import torchvision
 
-train_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=True, mode=poptorch.DataLoaderMode.AsyncRebatched)
+train_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=True)
 
 opts = poptorch.Options()
 
 train_dataloader = poptorch.DataLoader(
-    opts, train_dataset, batch_size=128, shuffle=True, num_workers=20
+    opts, train_dataset, batch_size=128, shuffle=True, num_workers=20, mode=poptorch.DataLoaderMode.AsyncRebatched
 )
 
 num = 0
