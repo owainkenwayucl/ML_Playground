@@ -77,7 +77,7 @@ class LossWrappedModel(torch.nn.Module):
         self.model = torchvision.models.resnet18(num_classes=num_classes)
         self.loss = criterion
     
-    def forward(self, input, target):
+    def forward(self, input, labels=None):
         out = self.model(input)
 
         if self.training:
