@@ -49,13 +49,13 @@ remainder = 89996 % (train_batch_size * n_ipu)
 if not remainder == 0:
     print(f">>> Warning: dropping {remainder} records from training set")
 
+if len(sys.argv) > 2:
+    inference_batch_size = int(sys.argv[2])
+
 iremainder = 7180 % (inference_batch_size * n_ipu)
 if not iremainder == 0:
     print(f">>> ERROR: {iremainder} records missing from test set due to running on {n_ipu} IPUs with an inference batch size of {inference_batch_size}.")
     sys.exit(1)
-
-if len(sys.argv) > 2:
-    inference_batch_size = int(sys.argv[2])
     # inference_batch_size = batch_size # do not allow batch setting on inference as it affects correctness.
 
 lr = 0.001
