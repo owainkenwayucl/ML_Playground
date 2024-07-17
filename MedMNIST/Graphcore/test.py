@@ -3,7 +3,7 @@
 
 # Converted to a script by Dr Owain Kenway, Summer 2024
 if __name__ == '__main__':
-    freeze_support()
+
     import numpy
     import torch
     import torch.nn
