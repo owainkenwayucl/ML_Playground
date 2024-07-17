@@ -51,7 +51,7 @@ if not remainder == 0:
 
 iremainder = 7180 % (inference_batch_size * n_ipu)
 if not iremainder == 0:
-    print(f">>> ERROR: {iremainder} records missing from test set due to running on {n_ipu} with an inference batch size of {inference_batch_size}.")
+    print(f">>> ERROR: {iremainder} records missing from test set due to running on {n_ipu} IPUs with an inference batch size of {inference_batch_size}.")
     sys.exit(1)
 
 if len(sys.argv) > 2:
