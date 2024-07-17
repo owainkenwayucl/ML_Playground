@@ -28,6 +28,12 @@ num_epochs = 10
 # poptorch causes isssues with batch sizes which are not exact divisors
 train_batch_size = 149
 inference_batch_size = 359
+
+if len(sys.argv) > 1:
+	batch_size = int(sys.argv[1])
+    train_batch_size = batch_size
+    # inference_batch_size = batch_size # do not allow batch setting on inference as it affects correctness.
+
 lr = 0.001
 
 info = medmnist.INFO[dataset]
