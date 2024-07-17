@@ -19,6 +19,7 @@ import medmnist
 
 import time
 import json
+import sys
 
 timing = {}
 timing["training"] = {}
@@ -37,7 +38,7 @@ train_batch_size = 149
 inference_batch_size = 359
 
 if len(sys.argv) > 1:
-	batch_size = int(sys.argv[1])
+    batch_size = int(sys.argv[1])
     train_batch_size = batch_size
     inference_batch_size = batch_size
 

@@ -14,6 +14,14 @@ import tqdm
 
 import medmnist
 
+import time
+import json
+import sys
+
+timing = {}
+timing["training"] = {}
+timing["inference"] = {}
+
 opts = poptorch.Options()
 opts.Training.setAutomaticLossScaling(True)
 
@@ -30,7 +38,7 @@ train_batch_size = 149
 inference_batch_size = 359
 
 if len(sys.argv) > 1:
-	batch_size = int(sys.argv[1])
+    batch_size = int(sys.argv[1])
     train_batch_size = batch_size
     # inference_batch_size = batch_size # do not allow batch setting on inference as it affects correctness.
 
@@ -65,6 +73,7 @@ print(test)
 
 model = torchvision.models.resnet18(num_classes=n_classes)
 
+timing["training"]["start"] = time.time()
     
 optimiser = poptorch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
@@ -72,12 +81,21 @@ poptorch_model = poptorch.trainingModel(model, options=opts, optimizer=optimiser
 model.train()
 
 for epoch in range(num_epochs):
+    epoch_start = time.time()
     for inputs, targets in tqdm.tqdm(train_dataloader):
         if task == mlbc:
             targets = targets.to(torch.float32)
         else:
             targets = targets.squeeze().long()
         _, loss = poptorch_model(inputs, targets)
+
+    epoch_finish = time.time()
+    timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
+
+timing["training"]["finish"] = time.time()
+timing["training"]["duration"] = timing["training"]["finish"] - timing["training"]["start"] 
+
+timing["inference"]["start"] = time.time()
 
 model.eval()
 guess_true = torch.tensor([])
@@ -100,8 +118,11 @@ with torch.no_grad():
         guess_true = torch.cat((guess_true, targets),0)
         guess_score = torch.cat((guess_score, outputs),0)
 
+timing["inference"]["finish"] = time.time()
+timing["inference"]["duration"] = timing["inference"]["finish"] - timing["inference"]["start"] 
+
 evaluator = medmnist.Evaluator(dataset, "test")
 metrics = evaluator.evaluate(guess_score)
 
 print(metrics)
-
+print(json.dumps(timing, indent=4))
