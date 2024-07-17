@@ -71,7 +71,21 @@ test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = inference
 print(train)
 print(test)
 
-model = torchvision.models.resnet18(num_classes=n_classes)
+class LossWrappedModel(torch.nn.Module):
+    def __init__(self, num_classes):
+        super()__init__()
+        self.model = torchvision.models.resnet18(num_classes=num_classes)
+        self.loss = criterion
+    
+    def forward(self, input, target):
+        out = self.model(input)
+
+        if self.training:
+            return out, self.loss(out, labels)
+        return out
+
+
+model = LossWrappedModel(num_classes=n_classes)
 
 timing["training"]["start"] = time.time()
     
