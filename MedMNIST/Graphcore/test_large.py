@@ -18,6 +18,7 @@ import time
 import json
 import sys
 import os 
+import math
 
 timing = {}
 timing["training"] = {}
@@ -43,6 +44,18 @@ inference_batch_size = 4
 if len(sys.argv) > 1:
     batch_size = int(sys.argv[1])
     train_batch_size = batch_size
+
+remainder = 89996 % (train_batch_size * n_ipu)
+if not remainder == 0:
+    print(f">>> Warning: dropping {remainder} records from training set")
+
+iremainder = 7180 % (inference_batch_size * n_ipu)
+if not iremainder == 0:
+    print(f">>> ERROR: {iremainder} records missing from test set due to running on {n_ipus} with an inference batch size of {inference_batch_size}.")
+    sys.exit(1)
+
+if len(sys.argv) > 2:
+    inference_batch_size = int(sys.argv[2])
     # inference_batch_size = batch_size # do not allow batch setting on inference as it affects correctness.
 
 lr = 0.001
@@ -68,7 +81,7 @@ else:
 train = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
 test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
-train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = train_batch_size, shuffle=True, drop_last=False, num_workers=20)
+train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = train_batch_size, shuffle=True, drop_last=True, num_workers=20)
 test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = inference_batch_size, shuffle=False, drop_last=False)
 
 print(train)
