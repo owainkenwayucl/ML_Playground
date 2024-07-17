@@ -109,6 +109,8 @@ for epoch in range(num_epochs):
     epoch_finish = time.time()
     timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
 
+poptorch_model.detachFromDevice()
+
 timing["training"]["finish"] = time.time()
 timing["training"]["duration"] = timing["training"]["finish"] - timing["training"]["start"] 
 
@@ -134,6 +136,8 @@ with torch.no_grad():
 
         guess_true = torch.cat((guess_true, targets),0)
         guess_score = torch.cat((guess_score, outputs),0)
+
+poptorch_model_inf.detachFromDevice()
 
 timing["inference"]["finish"] = time.time()
 timing["inference"]["duration"] = timing["inference"]["finish"] - timing["inference"]["start"] 
