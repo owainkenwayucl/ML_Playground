@@ -24,7 +24,9 @@ mlbc = "multi-label, binary-class"
 
 num_epochs = 10
 
-batch_size = 128
+# poptorch causes isssues with batch sizes which are not exact divisors - need to be fair in other platforms
+train_batch_size = 149
+inference_batch_size = 359
 
 lr = 0.001
 
@@ -44,8 +46,8 @@ data_transform = torchvision.transforms.Compose([
 train = data_class(split="train", transform=data_transform, download=True)
 test = data_class(split="test", transform=data_transform, download=True)
 
-train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = batch_size, shuffle=True)
-test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_size, shuffle=False)
+train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = train_batch_size, shuffle=True)
+test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = inference_batch_size, shuffle=False)
 
 print(train)
 print(test)
