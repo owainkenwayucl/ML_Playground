@@ -23,7 +23,6 @@ timing["training"] = {}
 timing["inference"] = {}
 
 opts = poptorch.Options()
-opts.Training.setAutomaticLossScaling(True)
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
