@@ -48,8 +48,8 @@ else:
 train = data_class(split="train", transform=data_transform, download=True)
 test = data_class(split="test", transform=data_transform, download=True)
 
-train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True, drop_last=false, num_workers=20, mode=poptorch.DataLoaderMode.AsyncRebatched)
-test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False, drop_last=false, mode=poptorch.DataLoaderMode.AsyncRebatched)
+train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = batch_size, shuffle=True, drop_last=False, num_workers=20, mode=poptorch.DataLoaderMode.AsyncRebatched)
+test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = batch_size, shuffle=False, drop_last=False, mode=poptorch.DataLoaderMode.AsyncRebatched)
 
 print(train)
 print(test)
