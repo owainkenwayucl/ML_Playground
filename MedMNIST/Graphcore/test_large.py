@@ -37,8 +37,8 @@ mlbc = "multi-label, binary-class"
 num_epochs = 10
 
 # poptorch causes isssues with batch sizes which are not exact divisors
-train_batch_size = 149
-inference_batch_size = 359
+train_batch_size = 4
+inference_batch_size = 4
 
 if len(sys.argv) > 1:
     batch_size = int(sys.argv[1])
