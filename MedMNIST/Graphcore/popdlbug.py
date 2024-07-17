@@ -15,4 +15,4 @@ num = 0
 for data, labels in train_dataloader:
     num += labels.shape[0]
 
-print(f"Loaded {num} records from the FashionMNIST training set of 60,000 records."
+print(f"Loaded {num} records from the FashionMNIST training set of 60,000 records.")
