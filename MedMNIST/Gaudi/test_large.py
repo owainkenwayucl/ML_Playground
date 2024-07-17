@@ -54,8 +54,8 @@ data_transform = torchvision.transforms.Compose([
 train = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
 test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
-train_dataloader = torch.utils.data.DataLoader(dataset=train, train_batch_size = batch_size, shuffle=True)
-test_dataloader = torch.utils.data.DataLoader(dataset=test, inference_batch_size = batch_size, shuffle=False)
+train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = train_batch_size, shuffle=True)
+test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = inference_batch_size, shuffle=False)
 
 print(train)
 print(test)
