@@ -2,7 +2,7 @@ import torch
 import poptorch
 import torchvision
 
-train_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=True)
+train_dataset = torchvision.datasets.FashionMNIST("data/", transform=torchvision.transforms.ToTensor(), download=True, train=True, mode=poptorch.DataLoaderMode.AsyncRebatched)
 
 opts = poptorch.Options()
 
