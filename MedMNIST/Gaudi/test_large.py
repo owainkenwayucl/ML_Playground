@@ -28,6 +28,8 @@ timing["inference"] = {}
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 dataset = "pathmnist"
+train_length = 89996
+inference_length = 7180
 
 mlbc = "multi-label, binary-class"
 
@@ -41,6 +43,20 @@ if len(sys.argv) > 1:
     batch_size = int(sys.argv[1])
     train_batch_size = batch_size
     inference_batch_size = batch_size
+
+remainder = train_length % train_batch_size
+actual_train_length = train_length - remainder
+if not remainder == 0:
+    print(f">>> Warning: dropping {remainder} records from training set")
+
+if len(sys.argv) > 2:
+    inference_batch_size = int(sys.argv[2])
+
+if len(sys.argv) > 3:
+    actual_train_length = int(sys.argv[3])
+    remainder = train_length - actual_train_length
+    print(f">>> Warning: dropping {remainder} records from training set as requested")
+    
 
 lr = 0.001
 
@@ -57,7 +73,10 @@ data_transform = torchvision.transforms.Compose([
     torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
-train = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
+train_temp = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
+indices = torch.arange(actual_train_length)
+train = torch.utils.data.Subset(train_temp, indices)
+
 test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
 train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = train_batch_size, shuffle=True)
