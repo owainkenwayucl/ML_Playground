@@ -13,6 +13,11 @@ import tqdm
 
 import medmnist
 
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
+
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 dataset = "pathmnist"
@@ -104,6 +109,9 @@ class classification_model(torch.nn.Module):
 
 model = classification_model(in_channels = n_channels, num_classes=n_classes)
 
+model.to(device)
+
+
 if task == mlbc:
     criterion = torch.nn.BCEWithLogitsLoss()
 else:
@@ -115,6 +123,7 @@ for epoch in range(num_epochs):
     model.train()
 
     for inputs, targets in tqdm.tqdm(train_dataloader):
+        inputs, targets = inputs.to(device), targets.to(device)
         optimiser.zero_grad()
         outputs = model(inputs)
 
@@ -132,8 +141,8 @@ guess_true = torch.tensor([])
 guess_score = torch.tensor([])
 
 with torch.no_grad():
-    for inputs, targets in test_dataloader:
-        outputs = model(inputs)
+        inputs = inputs.to(device)
+        outputs = model(inputs).to("cpu")
 
         if task == mlbc:
             targets = targets.to(torch.float32)
