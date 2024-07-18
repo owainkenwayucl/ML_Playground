@@ -89,7 +89,7 @@ train = torch.utils.data.Subset(train_temp, indices)
 
 test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
-train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = train_batch_size, shuffle=True, drop_last=True, num_workers=20)
+train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = train_batch_size, shuffle=True, drop_last=False, num_workers=20)
 test_dataloader = poptorch.DataLoader(opts, dataset=test, batch_size = inference_batch_size, shuffle=False, drop_last=False)
 
 print(train)
