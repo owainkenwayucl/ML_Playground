@@ -52,7 +52,7 @@ if not remainder == 0:
 if len(sys.argv) > 2:
     inference_batch_size = int(sys.argv[2])
 
-iremainder = 7180 % (inference_batch_size * n_ipu)
+iremainder = 7180 % inference_batch_size
 if not iremainder == 0:
     print(f">>> ERROR: {iremainder} records missing from test set due to running on {n_ipu} IPUs with an inference batch size of {inference_batch_size}.")
     sys.exit(1)
@@ -133,6 +133,7 @@ model.eval()
 guess_true = torch.tensor([])
 guess_score = torch.tensor([])
 
+opts.replicationFactor(1) # use one IPU for inference
 poptorch_model_inf = poptorch.inferenceModel(model, options=opts)
 
 with torch.no_grad():
