@@ -141,6 +141,7 @@ model.eval()
 guess_true = torch.tensor([])
 guess_score = torch.tensor([])
 
+opts = poptorch.Options()
 opts.replicationFactor(1) # use one IPU for inference
 poptorch_model_inf = poptorch.inferenceModel(model, options=opts)
 
