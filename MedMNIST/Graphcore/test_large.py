@@ -84,7 +84,7 @@ else:
     criterion = torch.nn.CrossEntropyLoss()
 
 train_temp = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
-indices = torch.arrange(actual_train_length)
+indices = torch.arange(actual_train_length)
 train = torch.utils.data.Subset(train_temp, indices)
 
 test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
