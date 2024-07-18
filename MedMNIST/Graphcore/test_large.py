@@ -32,6 +32,8 @@ opts.replicationFactor(n_ipu)
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 dataset = "pathmnist"
+train_length = 89996
+inference_length = 7180
 
 mlbc = "multi-label, binary-class"
 
@@ -45,14 +47,17 @@ if len(sys.argv) > 1:
     batch_size = int(sys.argv[1])
     train_batch_size = batch_size
 
-remainder = 89996 % (train_batch_size * n_ipu)
+remainder = train_length % (train_batch_size * n_ipu)
+actual_train_length = train_length - remainder
 if not remainder == 0:
     print(f">>> Warning: dropping {remainder} records from training set")
+
+    
 
 if len(sys.argv) > 2:
     inference_batch_size = int(sys.argv[2])
 
-iremainder = 7180 % inference_batch_size
+iremainder = inference_length % inference_batch_size
 if not iremainder == 0:
     print(f">>> ERROR: {iremainder} records missing from test set due to running on {n_ipu} IPUs with an inference batch size of {inference_batch_size}.")
     sys.exit(1)
@@ -78,7 +83,10 @@ if task == mlbc:
 else:
     criterion = torch.nn.CrossEntropyLoss()
 
-train = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
+train_temp = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
+indices = torch.arrange(actual_train_length)
+train = torch.utils.data.Subset(train_temp, indices)
+
 test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
 train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = train_batch_size, shuffle=True, drop_last=True, num_workers=20)
