@@ -141,9 +141,9 @@ guess_true = torch.tensor([])
 guess_score = torch.tensor([])
 
 with torch.no_grad():
+    for inputs, targets in test_dataloader:
         inputs = inputs.to(device)
         outputs = model(inputs).to("cpu")
-
         if task == mlbc:
             targets = targets.to(torch.float32)
         else:
