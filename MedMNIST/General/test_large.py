@@ -22,7 +22,11 @@ timing["inference"] = {}
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
-    print(f"Detected Cuda Device: {torch.cuda.get_device_name(0)}")
+    device_name = torch.cuda.get_device_name(0)
+    print(f"Detected Cuda Device: {device_name}")
+    if device_name == "AMD Instinct MI300X":
+        torch.set_float32_matmul_precision('high')
+        print("MI300x detected - enabling TensorFloat32 cores.")
 else:
     device = torch.device("cpu")
 
