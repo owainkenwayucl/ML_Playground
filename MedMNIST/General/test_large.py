@@ -22,7 +22,7 @@ timing["inference"] = {}
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
-    print(f"Detected Cuda Device: {torch.cuda.get_device_name[0]}")
+    print(f"Detected Cuda Device: {torch.cuda.get_device_name(0)}")
 else:
     device = torch.device("cpu")
 
