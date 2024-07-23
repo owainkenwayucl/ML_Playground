@@ -22,6 +22,7 @@ timing["inference"] = {}
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
+    print(f"Detected Cuda Device: {torch.cuda.get_device_name[0]}")
 else:
     device = torch.device("cpu")
 
@@ -95,7 +96,7 @@ model = torchvision.models.resnet18(num_classes=n_classes)
 timing["training"]["start"] = time.time()
 
 model.to(device)
-
+model = torch.compile(model, fullgraph=True)
 if task == mlbc:
     criterion = torch.nn.BCEWithLogitsLoss()
 else:
