@@ -16,6 +16,8 @@ import time
 import json
 import sys
 
+ipex = False
+
 timing = {}
 timing["training"] = {}
 timing["inference"] = {}
@@ -30,6 +32,12 @@ if torch.cuda.is_available():
     print("Enabling TensorFloat32 cores.")
 else:
     device = torch.device("cpu")
+    try: 
+        import intel_extension_for_pytorch as ipex
+        print("IPEX for CPU enabled.")
+        ipex = True
+    except:
+        pass
 
 import medmnist
 
@@ -101,13 +109,19 @@ model = torchvision.models.resnet50(num_classes=n_classes)
 timing["training"]["start"] = time.time()
 
 model.to(device)
-model = torch.compile(model, fullgraph=True)
+
 if task == mlbc:
     criterion = torch.nn.BCEWithLogitsLoss()
 else:
     criterion = torch.nn.CrossEntropyLoss()
     
 optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+
+if ipex:
+    model, optimiser = ipex.optimize(model, optimizer=optimiser, weights_prepack=False)
+    model = torch.compile(model, backend="ipex")
+else:
+    model = torch.compile(model, fullgraph=True)
 
 for epoch in range(num_epochs):
     epoch_start = time.time()
