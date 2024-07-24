@@ -16,7 +16,7 @@ import time
 import json
 import sys
 
-ipex = False
+ipex_enabled = False
 
 timing = {}
 timing["training"] = {}
@@ -35,7 +35,7 @@ else:
     try: 
         import intel_extension_for_pytorch as ipex
         print("IPEX for CPU enabled.")
-        ipex = True
+        ipex_enabled = True
     except:
         pass
 
@@ -117,7 +117,7 @@ else:
     
 optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
-if ipex:
+if ipex_enabled:
     model, optimiser = ipex.optimize(model, optimizer=optimiser, weights_prepack=False)
     model = torch.compile(model, backend="ipex")
 else:
