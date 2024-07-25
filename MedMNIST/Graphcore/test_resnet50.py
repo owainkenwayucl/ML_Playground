@@ -94,7 +94,7 @@ test = data_class(split="test", transform=data_transform, download=True, size=22
 train_dataloader = poptorch.DataLoader(opts, dataset=train, batch_size = train_batch_size, shuffle=True, drop_last=False, num_workers=20)
 test_dataloader = poptorch.DataLoader(opts_inf, dataset=test, batch_size = inference_batch_size, shuffle=False, drop_last=False)
 
-print(train)
+print(train_temp)
 print(test)
 
 class LossWrappedModel(torch.nn.Module):

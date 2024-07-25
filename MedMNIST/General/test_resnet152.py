@@ -99,7 +99,7 @@ test = data_class(split="test", transform=data_transform, download=True, size=22
 train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = train_batch_size, shuffle=True)
 test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = train_batch_size, shuffle=False)
 
-print(train)
+print(train_temp)
 print(test)
 
 
