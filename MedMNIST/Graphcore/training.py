@@ -208,13 +208,15 @@ numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03
 
 print("Exported model has been tested with ONNXRuntime, and the result looks good!")
 
+print(metrics)
+
 print(" --- CUT HERE --- ")
 
 metrics_ = {}
 info = {}
 info["onnx filename"] = onnx_file
-metrics_["AUC"] = metrics["AUC"]
-metrics_["Accuracy"] = metrics["ACC"]
+metrics_["AUC"] = metrics[0]
+metrics_["Accuracy"] = metrics[1]
 log_filename = f"{onnx_file}.log"
 info["metrics"] = metrics_
 info["timing"] = timing
