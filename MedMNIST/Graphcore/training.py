@@ -14,6 +14,9 @@ import tqdm
 
 import medmnist
 
+import onnx
+import onnxruntime
+
 import time
 import json
 import sys
