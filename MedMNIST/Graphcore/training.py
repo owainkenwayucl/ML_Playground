@@ -209,5 +209,14 @@ numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03
 print("Exported model has been tested with ONNXRuntime, and the result looks good!")
 
 print(" --- CUT HERE --- ")
+
+metrics["onnx filename"] = onnx_file
+log_filename = f"{onnx_file}.log"
 timing["metrics"] = metrics
-print(json.dumps(timing, indent=4))
+
+log_data = json.dumps(timing, indent=4)
+print(log_data)
+
+with open(log_filename, "w") as lfh:
+    lfh.write(log_data)
+
