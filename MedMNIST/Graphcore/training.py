@@ -28,7 +28,7 @@ opts = poptorch.Options()
 opts_inf = poptorch.Options()
 opts_inf.replicationFactor(1) # use one IPU for inference
 
-n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 4))
+n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 16))
 opts.replicationFactor(n_ipu)
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
@@ -39,10 +39,10 @@ inference_length = 7180
 
 mlbc = "multi-label, binary-class"
 
-num_epochs = 10
+num_epochs = 5
 
 # poptorch causes isssues with batch sizes which are not exact divisors
-train_batch_size = 4
+train_batch_size = 1
 inference_batch_size = 4
 
 if len(sys.argv) > 1:
