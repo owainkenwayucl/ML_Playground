@@ -210,13 +210,14 @@ print("Exported model has been tested with ONNXRuntime, and the result looks goo
 
 print(" --- CUT HERE --- ")
 
-metrics["onnx filename"] = onnx_file
+metrics_ = {}
+metrics_["onnx filename"] = onnx_file
+metrics_["model_stats"] = metrics
 log_filename = f"{onnx_file}.log"
-timing["metrics"] = metrics
+timing["metrics"] = metrics_
 
 log_data = json.dumps(timing, indent=4)
 print(log_data)
 
 with open(log_filename, "w") as lfh:
     lfh.write(log_data)
-
