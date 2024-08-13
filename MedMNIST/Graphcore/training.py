@@ -42,7 +42,7 @@ inference_length = 7180
 
 mlbc = "multi-label, binary-class"
 
-num_epochs = 5
+num_epochs = 20
 
 # poptorch causes isssues with batch sizes which are not exact divisors
 train_batch_size = 1
