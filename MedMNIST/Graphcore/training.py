@@ -169,7 +169,7 @@ evaluator = medmnist.Evaluator(dataset, "test")
 metrics = evaluator.evaluate(guess_score)
 
 # ONNX
-gibberish = torch.randn(1, 1, 224, 224, requires_grad=True)
+gibberish = torch.randn(1, 3, 224, 224, requires_grad=True)
 torch_gibberish = model(gibberish)
 onnx_file = "medical_classifier.onnx"
 onnx_out_model = torch.onnx.export(model, 
