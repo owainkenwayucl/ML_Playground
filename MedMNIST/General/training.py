@@ -19,8 +19,6 @@ import sys
 import onnx
 import onnxruntime
 
-ipex_enabled = False
-
 timing = {}
 timing["training"] = {}
 timing["inference"] = {}
@@ -35,12 +33,6 @@ if torch.cuda.is_available():
     print("Enabling TensorFloat32 cores.")
 else:
     device = torch.device("cpu")
-    try: 
-        import intel_extension_for_pytorch as ipex
-        print("IPEX for CPU enabled.")
-        ipex_enabled = True
-    except:
-        pass
 
 import medmnist
 
@@ -122,11 +114,6 @@ else:
     
 optimiser = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
-if ipex_enabled:
-    model, optimiser = ipex.optimize(model, optimizer=optimiser, weights_prepack=False)
-    model = torch.compile(model, backend="ipex")
-else:
-    model = torch.compile(model, fullgraph=True)
 
 for epoch in range(num_epochs):
     epoch_start = time.time()
@@ -180,10 +167,10 @@ metrics = evaluator.evaluate(guess_score)
 
 # ONNX
 gibberish = torch.randn(1, 3, 224, 224, requires_grad=True)
-gibberish.to(device)
-torch_gibberish = model(gibberish)
+model_cpu = model.to("cpu")
+torch_gibberish = model_cpu(gibberish)
 onnx_file = f"medical_classifier_{num_epochs}.onnx"
-onnx_out_model = torch.onnx.export(model, 
+onnx_out_model = torch.onnx.export(model_cpu, 
                                gibberish,
                                onnx_file,
                                export_params=True,
