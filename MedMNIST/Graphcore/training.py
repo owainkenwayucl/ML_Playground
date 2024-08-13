@@ -68,6 +68,9 @@ if not iremainder == 0:
     sys.exit(1)
     # inference_batch_size = batch_size # do not allow batch setting on inference as it affects correctness.
 
+if len(sys.argv) > 3:
+    num_epochs = int(sys.argv[3])
+
 lr = 0.001
 
 info = medmnist.INFO[dataset]
@@ -174,7 +177,7 @@ metrics = evaluator.evaluate(guess_score)
 # ONNX
 gibberish = torch.randn(1, 3, 224, 224, requires_grad=True)
 torch_gibberish = model(gibberish)
-onnx_file = "medical_classifier.onnx"
+onnx_file = f"medical_classifier_{num_epochs}.onnx"
 onnx_out_model = torch.onnx.export(model, 
                                gibberish,
                                onnx_file,
