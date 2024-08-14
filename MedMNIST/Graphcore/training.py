@@ -106,7 +106,7 @@ print(test)
 class LossWrappedModel(torch.nn.Module):
     def __init__(self, num_classes):
         super().__init__()
-        self.model = torchvision.models.resnet50(num_classes=num_classes)
+        self.model = torchvision.models.resnet18(num_classes=num_classes)
         self.loss = criterion
     
     def forward(self, input, labels=None):
