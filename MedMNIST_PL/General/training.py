@@ -124,7 +124,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         self.log("test_acc", accuracy)
 
     def configure_optimizers(self):
-        optimiser = torch.optim.SGD(model.parameters(), lr=self.lr, momentum=0.9)
+        optimiser = torch.optim.SGD(self.model.parameters(), lr=self.lr, momentum=0.9)
         return optimiser
 
 
