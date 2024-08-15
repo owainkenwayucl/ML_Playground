@@ -108,7 +108,7 @@ def main():
     res18 = Resnet_Classifier(device, task, lr)
 
     trainer = pytorch_lightning.Trainer()
-    trainer.fit(model=res18, train_dataloaders=train_dl, max_epochs=num_epochs)
+    trainer.fit(model=res18, train_dataloaders=train_dl)
 
 if __name__ == "__main__":
     main()
