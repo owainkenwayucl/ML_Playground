@@ -61,7 +61,7 @@ def generate_dataloaders(dataset):
     return train_dataloader, val_dataloader, test_dataloader, task
 
 class Resnet_Classifier(pytorch_lightning.LightningModule):
-    def __init__(self, device, task, lr)
+    def __init__(self, device, task, lr):
         super().__init__
         self.model = torchvision.models.resnet18
         self.task = task
