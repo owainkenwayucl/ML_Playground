@@ -1,0 +1,8 @@
+lightning
+torch
+torchvision
+numpy
+medmnist
+onnx
+onnxscript
+onnxruntime
