@@ -65,16 +65,16 @@ def generate_dataloaders(dataset, batch_size):
 
 class Resnet_Classifier(pytorch_lightning.LightningModule):
     def __init__(self, device, task, lr):
-        super().__init__
+        super().__init__()
         self.model = torchvision.models.resnet18
         self.task = task
         self.device_name = device
         self.lr = lr
 
         if task == mlbc:
-            self.loss_model = torch.nn.BCEWithLogitsLoss()
+            self.loss_module = torch.nn.BCEWithLogitsLoss()
         else:
-            self.loss_model = torch.nn.CrossEntropyLoss()
+            self.loss_module = torch.nn.CrossEntropyLoss()
 
     def forward(self, images):
         return self.model(images)
@@ -88,7 +88,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         else:
             targets = targets.squeeze().long()
 
-        loss = self.loss_model(outputs, targets)
+        loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
         self.log("train_acc", accuracy, on_step=False, on_epoch=True)
@@ -104,7 +104,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         else:
             targets = targets.squeeze().long()
 
-        loss = self.loss_model(outputs, targets)
+        loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
         self.log("val_acc", accuracy)
@@ -118,7 +118,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         else:
             targets = targets.squeeze().long()
 
-        loss = self.loss_model(outputs, targets)
+        loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
         self.log("test_acc", accuracy)
