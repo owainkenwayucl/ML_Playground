@@ -49,14 +49,14 @@ def generate_dataloaders(dataset, batch_size):
     ])
 
     train = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
-    #val = test = data_class(split="val", transform=data_transform, download=True, size=224, mmap_mode='r')
+    val = test = data_class(split="val", transform=data_transform, download=True, size=224, mmap_mode='r')
     #test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
-    train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = batch_size, shuffle=True)
-    #val_dataloader = torch.utils.data.DataLoader(dataset=val, batch_size = batch_size, shuffle=False)
-    #test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_size, shuffle=False)
+    train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = batch_size, shuffle=True, num_workers=71)
+    val_dataloader = torch.utils.data.DataLoader(dataset=val, batch_size = batch_size, shuffle=False, num_workers=71)
+    #test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_size, shuffle=False, num_workers=71)
 
-    val_dataloader = None
+    #val_dataloader = None
     test_dataloader = None
 
     print(train)
@@ -147,9 +147,8 @@ def main():
 
     res18 = Resnet_Classifier(device, task, lr, num_classes)
 
-    trainer = pytorch_lightning.Trainer()
-    trainer.fit(model=res18, train_dataloaders=train_dl)
+    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs)
+    trainer.fit(model=res18, train_dataloaders=train_dl, val_dataloaders=val_dl, test_dataloaders=test_dl)
 
 if __name__ == "__main__":
     main()
-    
