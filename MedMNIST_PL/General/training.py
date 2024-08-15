@@ -71,6 +71,14 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         self.device_name = device
         self.lr = lr
 
+        if task == mlbc:
+            self.loss_model = torch.nn.BCEWithLogitsLoss()
+        else:
+            self.loss_model = torch.nn.CrossEntropyLoss()
+
+    def forward(self, images):
+        return self.model(images)
+
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
         outputs = self.model(inputs)
@@ -80,8 +88,40 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         else:
             targets = targets.squeeze().long()
 
-        loss = self.criterion(outputs, targets)
+        loss = self.loss_model(outputs, targets)
+
+        accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
+        self.log("train_acc", accuracy, on_step=False, on_epoch=True)
+        self.log("train_loss", loss)
         return loss
+
+    def validation_step(self, batch, batch_idx):
+        inputs, targets = batch
+        outputs = self.model(inputs)
+
+        if self.task == mlbc:
+            targets = targets.to(torch.float32)
+        else:
+            targets = targets.squeeze().long()
+
+        loss = self.loss_model(outputs, targets)
+
+        accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
+        self.log("val_acc", accuracy)
+
+    def test_step(self, batch, batch_idx):
+        inputs, targets = batch
+        outputs = self.model(inputs)
+
+        if self.task == mlbc:
+            targets = targets.to(torch.float32)
+        else:
+            targets = targets.squeeze().long()
+
+        loss = self.loss_model(outputs, targets)
+
+        accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
+        self.log("test_acc", accuracy)
 
     def configure_optimizers(self):
         optimiser = torch.optim.SGD(model.parameters(), lr=self.lr, momentum=0.9)
