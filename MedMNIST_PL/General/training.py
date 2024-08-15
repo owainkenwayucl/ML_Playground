@@ -68,12 +68,11 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         super().__init__
         self.model = torchvision.models.resnet18
         self.task = task
-        self.device = device
+        self.device_name = device
         self.lr = lr
 
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
-        inputs, targets = inputs.to(device), targets.to(device)
         outputs = self.model(inputs)
 
         if self.task == mlbc:
