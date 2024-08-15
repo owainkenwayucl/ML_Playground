@@ -33,7 +33,7 @@ def detect_platform():
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
-def generate_dataloaders(dataset):
+def generate_dataloaders(dataset, batch_size):
 
     info = medmnist.INFO[dataset]
     task = info["task"]
@@ -52,9 +52,9 @@ def generate_dataloaders(dataset):
     val = test = data_class(split="val", transform=data_transform, download=True, size=224, mmap_mode='r')
     test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
-    train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = train_batch_size, shuffle=True)
-    val_dataloader = torch.utils.data.DataLoader(dataset=val, batch_size = train_batch_size, shuffle=False)
-    test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = train_batch_size, shuffle=False)
+    train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = batch_size, shuffle=True)
+    val_dataloader = torch.utils.data.DataLoader(dataset=val, batch_size = batch_size, shuffle=False)
+    test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_size, shuffle=False)
 
     print(train)
 
@@ -97,12 +97,11 @@ def main():
 
     num_epochs = 10
 
-    train_batch_size = 32
-    inference_batch_size = 32
+    batch_size = 32
 
     lr = 0.001
 
-    train_dl, val_dl, test_dl, task = generate_dataloaders(dataset)
+    train_dl, val_dl, test_dl, task = generate_dataloaders(dataset, batch_size)
 
     res18 = Resnet_Classifier(device, task, lr)
 
