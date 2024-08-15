@@ -101,7 +101,7 @@ print(test)
 
 
 
-model = torchvision.models.resnet50(num_classes=n_classes)
+model = torchvision.models.resnet18(num_classes=n_classes)
 
 timing["training"]["start"] = time.time()
 
