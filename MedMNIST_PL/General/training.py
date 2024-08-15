@@ -61,12 +61,12 @@ def generate_dataloaders(dataset, batch_size):
 
     print(train)
 
-    return train_dataloader, val_dataloader, test_dataloader, task
+    return train_dataloader, val_dataloader, test_dataloader, task, n_classes
 
 class Resnet_Classifier(pytorch_lightning.LightningModule):
-    def __init__(self, device, task, lr):
+    def __init__(self, device, task, lr, num_classes):
         super().__init__()
-        self.model = torchvision.models.resnet18
+        self.model = torchvision.models.resnet18(num_classes=num_classes)
         self.task = task
         self.device_name = device
         self.lr = lr
@@ -124,7 +124,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         self.log("test_acc", accuracy)
 
     def configure_optimizers(self):
-        optimiser = torch.optim.SGD(self.parameters(), lr=self.lr, momentum=0.9)
+        optimiser = torch.optim.SGD(self.model.parameters(), lr=self.lr, momentum=0.9)
         return optimiser
 
 
@@ -143,12 +143,13 @@ def main():
 
     lr = 0.001
 
-    train_dl, val_dl, test_dl, task = generate_dataloaders(dataset, batch_size)
+    train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
 
-    res18 = Resnet_Classifier(device, task, lr)
+    res18 = Resnet_Classifier(device, task, lr, num_classes)
 
     trainer = pytorch_lightning.Trainer()
     trainer.fit(model=res18, train_dataloaders=train_dl)
 
 if __name__ == "__main__":
     main()
+    
