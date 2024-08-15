@@ -53,8 +53,11 @@ def generate_dataloaders(dataset, batch_size):
     test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
     train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = batch_size, shuffle=True)
-    val_dataloader = torch.utils.data.DataLoader(dataset=val, batch_size = batch_size, shuffle=False)
-    test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_size, shuffle=False)
+    #val_dataloader = torch.utils.data.DataLoader(dataset=val, batch_size = batch_size, shuffle=False)
+    #test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = batch_size, shuffle=False)
+
+    val_dataloader = None
+    test_dataloader = None
 
     print(train)
 
