@@ -56,6 +56,8 @@ def generate_dataloaders(dataset):
     val_dataloader = torch.utils.data.DataLoader(dataset=val, batch_size = train_batch_size, shuffle=False)
     test_dataloader = torch.utils.data.DataLoader(dataset=test, batch_size = train_batch_size, shuffle=False)
 
+    print(train)
+
     return train_dataloader, val_dataloader, test_dataloader
 
 def main():
@@ -73,9 +75,9 @@ def main():
 
     lr = 0.001
 
-    train_dl, val_dl, test_dl = generate(dataloaders(dataset))
+    train_dl, val_dl, test_dl = generate_dataloaders(dataset)
 
-    
+
 
 if __name__ == "__main__":
     main()
