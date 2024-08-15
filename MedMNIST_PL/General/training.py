@@ -49,7 +49,7 @@ def generate_dataloaders(dataset):
     ])
 
     train = data_class(split="train", transform=data_transform, download=True, size=224, mmap_mode='r')
-    val = test = data_class(split=="val", transform=data_transform, download=True, size=224, mmap_mode='r')
+    val = test = data_class(split="val", transform=data_transform, download=True, size=224, mmap_mode='r')
     test = data_class(split="test", transform=data_transform, download=True, size=224, mmap_mode='r')
 
     train_dataloader = torch.utils.data.DataLoader(dataset=train, batch_size = train_batch_size, shuffle=True)
@@ -107,7 +107,7 @@ def main():
     res18 = Resnet_Classifier(device, task, lr)
 
     trainer = pytorch_lightning.Trainer()
-    trainer.fit(model=res18, train_dataloaders=train_dl)
+    trainer.fit(model=res18, train_dataloaders=train_dl, max_epochs=num_epochs)
 
 if __name__ == "__main__":
     main()
