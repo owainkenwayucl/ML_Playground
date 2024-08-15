@@ -58,7 +58,34 @@ def generate_dataloaders(dataset):
 
     print(train)
 
-    return train_dataloader, val_dataloader, test_dataloader
+    return train_dataloader, val_dataloader, test_dataloader, task
+
+class Resnet_Classifier(pytorch_lightning.LightningModule):
+    def __init__(self, device, task, lr)
+        super().__init__
+        self.model = torchvision.models.resnet18
+        self.task = task
+        self.device = device
+        self.lr = lr
+
+    def training_step(self, batch, batch_idx):
+        inputs, targets = batch
+        inputs, targets = inputs.to(device), targets.to(device)
+        outputs = self.model(inputs)
+
+        if self.task == mlbc:
+            targets = targets.to(torch.float32)
+        else:
+            targets = targets.squeeze().long()
+
+        loss = self.criterion(outputs, targets)
+        return loss
+
+    def configure_optimizers(self):
+        optimiser = torch.optim.SGD(model.parameters(), lr=self.lr, momentum=0.9)
+        return optimiser
+
+
 
 def main():
     device = detect_platform()
@@ -75,9 +102,12 @@ def main():
 
     lr = 0.001
 
-    train_dl, val_dl, test_dl = generate_dataloaders(dataset)
+    train_dl, val_dl, test_dl, task = generate_dataloaders(dataset)
 
+    res18 = Resnet_Classifier(device, task, lr)
 
+    trainer = pytorch_lightning.Trainer()
+    trainer.fit(model=res18, train_dataloaders=train_dl)
 
 if __name__ == "__main__":
     main()
