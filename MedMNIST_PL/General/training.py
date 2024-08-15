@@ -139,16 +139,18 @@ def main():
 
     num_epochs = 10
 
-    batch_size = 32
+    batch_size = 1024
 
     lr = 0.001
 
     train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
 
-    res18 = Resnet_Classifier(device, task, lr, num_classes)
+    model = Resnet_Classifier(device, task, lr, num_classes)
 
     trainer = pytorch_lightning.Trainer(max_epochs=num_epochs)
-    trainer.fit(model=res18, train_dataloaders=train_dl, val_dataloaders=val_dl)
+    trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
+    trainer.validate(model=model, dataloaders=val_dl)
+    trainer.test(model=model, dataloaders=test_dl)
 
 if __name__ == "__main__":
     main()
