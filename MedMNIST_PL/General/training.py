@@ -141,6 +141,12 @@ def main():
 
     batch_size = 1024
 
+    if len(sys.argv) > 1:
+        num_epochs = int(sys.argv[1])
+
+    if len(sys.argv) > 2:
+        num_epochs = int(sys.argv[2])
+
     lr = 0.001
 
     train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
