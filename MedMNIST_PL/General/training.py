@@ -127,6 +127,38 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         optimiser = torch.optim.SGD(self.model.parameters(), lr=self.lr, momentum=0.9)
         return optimiser
 
+def write_onnx(model, filename):
+    gibberish = torch.randn(1, 3, 224, 224, requires_grad=True)
+    model_cpu = model.to("cpu")
+    torch_gibberish = model_cpu(gibberish)
+    onnx_file = filename
+    onnx_out_model = torch.onnx.export(model_cpu, 
+                                gibberish,
+                                onnx_file,
+                                export_params = True,
+                                input_names = ['input'],                       # the model's input names
+                                output_names = ['output'],                     # the model's output names
+                                dynamic_axes = {'input' : {0 : 'batch_size'},    # variable length axes
+                                                'output' : {0 : 'batch_size'}})
+
+    print("Checking with ONNX")
+
+    onnx_model = onnx.load(onnx_file)
+
+    print("Checking with ONNX Runtime")
+
+
+    ort_session = onnxruntime.InferenceSession(onnx_file, providers=["CPUExecutionProvider"])
+
+    def to_numpy(tensor):
+        return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
+
+    # compute ONNX Runtime output prediction
+    ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(gibberish)}
+    ort_outs = ort_session.run(None, ort_inputs)
+
+    # compare ONNX Runtime and PyTorch results
+    numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03, atol=1e-05)
 
 
 def main():
@@ -134,8 +166,6 @@ def main():
 
     # Define parameters
     dataset = "pathmnist"
-    train_length = 89996
-    inference_length = 7180
 
     num_epochs = 10
 
@@ -157,6 +187,8 @@ def main():
     trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
     trainer.validate(model=model, dataloaders=val_dl)
     trainer.test(model=model, dataloaders=test_dl)
+
+    write_onnx(model=model, filename=f"medmnist_classifier_{dataset}_{num_epochs}.onnx")
 
 if __name__ == "__main__":
     main()
