@@ -15,6 +15,9 @@ import pytorch_lightning
 
 import medmnist
 
+import onnx
+import onnxruntime
+
 mlbc = "multi-label, binary-class"
 
 def detect_platform():
