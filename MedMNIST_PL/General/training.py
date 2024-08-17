@@ -163,11 +163,11 @@ def write_onnx(model, filename):
 
     # compare ONNX Runtime and PyTorch results
     numpy.testing.assert_allclose(to_numpy(torch_gibberish), ort_outs[0], rtol=1e-03, atol=1e-05)
-
+    print("Validation success")
 
 def main():
     device = detect_platform()
-
+    stats = {}
     # Define parameters
     dataset = "pathmnist"
 
@@ -183,6 +183,18 @@ def main():
         batch_size = int(sys.argv[2])
         print(f" >>> Setting batch_size to {batch_size}")
 
+    output_filename = f"medmnist_classifier_{dataset}_{num_epochs}"
+
+    checkpoint_filename = f"{output_filename}.ckpt"
+    onnx_filename = f"{output_filename}.onnx"
+    weights_filename = f"{output_filename}.weights"
+    json_filename = f"{output_filename}.json"
+
+    stats["output_filename"] = output_filename
+    stats["checkpoint_filename"] = checkpoint_filename
+    stats["onnx_filename"] = onnx_filename
+    stats["weights_filename"] = weights_filename
+    stats["json_filename"] = json_filename
 
     trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, strategy="ddp")
 
@@ -193,13 +205,24 @@ def main():
     model = Resnet_Classifier(device, task, lr, num_classes)
 
     trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
-    trainer.validate(model=model, dataloaders=val_dl)
-    trainer.test(model=model, dataloaders=test_dl)
+    val_stats = trainer.validate(model=model, dataloaders=val_dl)
+    test_stats = trainer.test(model=model, dataloaders=test_dl)
 
-    output_filename = f"medmnist_classifier_{dataset}_{num_epochs}"
-    trainer.save_checkpoint(f"{output_filename}.ckpt")
+    stats["validation_stats"] = val_stats
+    stats["test_stats"] = test_stats
+
+    trainer.save_checkpoint(checkpoint_filename)
+    torch.save(model.model.state_dict(), weights_filename)
+
     if trainer.global_rank == 0:
-        write_onnx(model=model, filename=f"{output_filename}.onnx")
+        write_onnx(model=model, filename=onnx_filename)
+
+        log_data = json.dumps(stats, indent=4)
+        print(log_data)
+
+        with open(json_filename, "w") as lfh:
+            lfh.write(log_data)
+
 
 if __name__ == "__main__":
     main()
