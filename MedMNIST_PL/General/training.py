@@ -175,13 +175,14 @@ def main():
 
     batch_size = 1024
 
-    if len(sys.argv) > 1:
-        print(f" >>> Setting num_epochs to {num_epochs}")
+    if len(sys.argv) > 1:        
         num_epochs = int(sys.argv[1])
+        print(f" >>> Setting num_epochs to {num_epochs}")
 
     if len(sys.argv) > 2:
-        print(f" >>> Setting batch_size to {batch_size}")
         batch_size = int(sys.argv[2])
+        print(f" >>> Setting batch_size to {batch_size}")
+
 
     trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, strategy="ddp")
 
