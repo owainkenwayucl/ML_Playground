@@ -133,6 +133,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
 def write_onnx(model, filename):
     gibberish = torch.randn(1, 3, 224, 224, requires_grad=True)
     model_cpu = model.to("cpu")
+    model_cpu.eval()
     torch_gibberish = model_cpu(gibberish)
     onnx_file = filename
     onnx_out_model = torch.onnx.export(model_cpu, 
