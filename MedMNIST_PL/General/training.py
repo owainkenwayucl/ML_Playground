@@ -176,10 +176,12 @@ def main():
     batch_size = 1024
 
     if len(sys.argv) > 1:
+        print(f" >>> Setting num_epochs to {num_epochs}")
         num_epochs = int(sys.argv[1])
 
     if len(sys.argv) > 2:
-        num_epochs = int(sys.argv[2])
+        print(f" >>> Setting batch_size to {batch_size}")
+        batch_size = int(sys.argv[2])
 
     lr = 0.001
 
@@ -187,7 +189,6 @@ def main():
 
     model = Resnet_Classifier(device, task, lr, num_classes)
 
-    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, strategy="ddp")
     trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
     trainer.validate(model=model, dataloaders=val_dl)
     trainer.test(model=model, dataloaders=test_dl)
@@ -195,8 +196,7 @@ def main():
     output_filename = f"medmnist_classifier_{dataset}_{num_epochs}"
     trainer.save_checkpoint(f"{output_filename}.ckpt")
     if trainer.global_rank == 0:
-        temp_model = torch.load(f"{output_filename}.ckpt")
-        write_onnx(model=temp_model, filename=f"{output_filename}.onnx")
+        write_onnx(model=model, filename=f"{output_filename}.onnx")
 
 if __name__ == "__main__":
     main()
