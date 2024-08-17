@@ -187,7 +187,7 @@ def main():
 
     model = Resnet_Classifier(device, task, lr, num_classes)
 
-    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs)
+    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, strategy="ddp")
     trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
     trainer.validate(model=model, dataloaders=val_dl)
     trainer.test(model=model, dataloaders=test_dl)
