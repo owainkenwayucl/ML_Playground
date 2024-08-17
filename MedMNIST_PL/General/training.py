@@ -195,8 +195,8 @@ def main():
     output_filename = f"medmnist_classifier_{dataset}_{num_epochs}"
     trainer.save_checkpoint(f"{output_filename}.ckpt")
     if trainer.global_rank == 0:
-        temp_model = torch.load(f"{output_filename}.ckpt"))
-        write_onnx(model=temp_model, filename=f"{output_filename}}.onnx")
+        temp_model = torch.load(f"{output_filename}.ckpt")
+        write_onnx(model=temp_model, filename=f"{output_filename}.onnx")
 
 if __name__ == "__main__":
     main()
