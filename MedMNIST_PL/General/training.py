@@ -183,6 +183,8 @@ def main():
         print(f" >>> Setting batch_size to {batch_size}")
         batch_size = int(sys.argv[2])
 
+    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, strategy="ddp")
+
     lr = 0.001
 
     train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
