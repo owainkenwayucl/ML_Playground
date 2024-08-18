@@ -39,7 +39,9 @@ def detect_platform():
             num_acc = int(os.getenv("NUM_AVAILABLE_IPU", 1))
             print(f"Detected {n_ipu} Graphcore IPU(s)")
             device = "ipu"
-    
+        except:
+            pass     
+               
     return device, num_acc
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
