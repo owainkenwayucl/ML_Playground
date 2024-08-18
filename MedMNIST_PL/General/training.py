@@ -10,6 +10,7 @@ import tqdm
 import time
 import json
 import sys
+import os
 
 import pytorch_lightning
 
@@ -21,18 +22,26 @@ import onnxruntime
 mlbc = "multi-label, binary-class"
 
 def detect_platform():
+    num_acc = 1
     # Set up devices
     if torch.cuda.is_available():
-        device = torch.device("cuda")
-        device_name = torch.cuda.get_device_name(0)
-        print(f"Detected Cuda Device: {device_name}")
-
+        device = "cuda"
+        num_acc = torch.cuda.device_count()
+        for i in range(num_acc):
+            device_name = torch.cuda.get_device_name(i)
+            print(f"Detected Cuda Device: {device_name}")
         torch.set_float32_matmul_precision('high')
         print("Enabling TensorFloat32 cores.")
+    else if:
+        try: 
+            import poptorch
+            num_acc = int(os.getenv("NUM_AVAILABLE_IPU", 8))
+            print(f"Detected {n_ipu} Graphcore IPU(s)")
+            device = "ipu"
     else:
-        device = torch.device("cpu")
+        device = "cpu"
     
-    return device
+    return device, num_acc
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
@@ -166,7 +175,7 @@ def write_onnx(model, filename):
     print("Validation success")
 
 def main():
-    device = detect_platform()
+    device, num_acc = detect_platform()
     stats = {}
     # Define parameters
     dataset = "pathmnist"
@@ -196,7 +205,7 @@ def main():
     stats["weights_filename"] = weights_filename
     stats["json_filename"] = json_filename
 
-    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs)
+    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
 
     lr = 0.001
 
