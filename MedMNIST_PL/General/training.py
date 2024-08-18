@@ -23,7 +23,8 @@ mlbc = "multi-label, binary-class"
 
 def detect_platform():
     num_acc = 1
-    # Set up devices
+    device = cpu
+    # Set up devcies
     if torch.cuda.is_available():
         device = "cuda"
         num_acc = torch.cuda.device_count()
@@ -32,14 +33,12 @@ def detect_platform():
             print(f"Detected Cuda Device: {device_name}")
         torch.set_float32_matmul_precision('high')
         print("Enabling TensorFloat32 cores.")
-    elif:
+    else:
         try: 
             import poptorch
             num_acc = int(os.getenv("NUM_AVAILABLE_IPU", 1))
             print(f"Detected {n_ipu} Graphcore IPU(s)")
             device = "ipu"
-    else:
-        device = "cpu"
     
     return device, num_acc
 
