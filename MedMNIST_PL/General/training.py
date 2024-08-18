@@ -85,6 +85,8 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         self.log_safe = True
         if (self.device_name == "ipu"):
             self.log_safe = False
+            self.val_outputs = []
+            self.test_outputs = []
         self.lr = lr
 
         if task == mlbc:
@@ -126,6 +128,8 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
         if self.log_safe:
             self.log("val_acc", accuracy, sync_dist=True)
+        else:
+            self.val_outputs.append(accuracy)
         return loss
 
     def test_step(self, batch, batch_idx):
@@ -142,7 +146,19 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
         if self.log_safe:
             self.log("test_acc", accuracy, sync_dist=True)
+        else:
+            self.test_outputs.append(accuracy)
         return loss
+
+    def on_validation_epoch_end(self) -> None:
+        if not self.log_safe:
+            self.log("val_acc", torch.stack(self.val_outputs).mean())
+            self.val_outputs.clear()
+
+    def on_test_epoch_end(self) -> None:
+        if not self.log_safe:
+            self.log("test_acc", torch.stack(self.test_outputs).mean())
+            self.test_outputs.clear()
 
     def configure_optimizers(self):
         optimiser = torch.optim.SGD(self.model.parameters(), lr=self.lr, momentum=0.9)
