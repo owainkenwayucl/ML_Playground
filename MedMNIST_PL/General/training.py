@@ -152,7 +152,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
 
     def on_validation_epoch_end(self) -> None:
         if not self.log_safe:
-            if (self.device) == "cpu":
+            if str(self.device) == "cpu":
                 self.log("val_acc", torch.stack(self.val_outputs).mean())
             self.val_outputs.clear()
 
