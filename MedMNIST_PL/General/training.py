@@ -37,7 +37,7 @@ def detect_platform():
         try: 
             import poptorch
             num_acc = int(os.getenv("NUM_AVAILABLE_IPU", 1))
-            print(f"Detected {n_acc} Graphcore IPU(s)")
+            print(f"Detected {num_acc} Graphcore IPU(s)")
             device = "ipu"
         except:
             pass     
