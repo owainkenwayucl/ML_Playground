@@ -185,7 +185,7 @@ def write_onnx(model, filename):
 
 def main():
     device, num_acc = detect_platform()
-    print(f"Detected device config: {device}. {num_acc}")
+    print(f"Detected device config: {device}:{num_acc}")
     stats = {}
     # Define parameters
     dataset = "pathmnist"
@@ -193,6 +193,8 @@ def main():
     num_epochs = 10
 
     batch_size = 1024
+    if device == "ipu":
+        batch_size = 2 # limited memory
 
     if len(sys.argv) > 1:        
         num_epochs = int(sys.argv[1])
@@ -214,10 +216,17 @@ def main():
     stats["onnx_filename"] = onnx_filename
     stats["weights_filename"] = weights_filename
     stats["json_filename"] = json_filename
+    stats["device"] = device
+    stats["num_accelerators"] = num_acc
+    stats["num_epochs"] = num_epochs
+    stats["batch_size"] = batch_size
 
     trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
 
     lr = 0.001
+    stats["lr"] = lr
+
+    print(json.dumps(stats))
 
     train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
 
