@@ -152,12 +152,14 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
 
     def on_validation_epoch_end(self) -> None:
         if not self.log_safe:
-            self.log("val_acc", torch.stack(self.val_outputs).mean())
+            if (self.device) == "cpu"
+                self.log("val_acc", torch.stack(self.val_outputs).mean())
             self.val_outputs.clear()
 
     def on_test_epoch_end(self) -> None:
         if not self.log_safe:
-            self.log("test_acc", torch.stack(self.test_outputs).mean())
+            if str(self.device) == "cpu":
+                self.log("test_acc", torch.stack(self.test_outputs).mean())
             self.test_outputs.clear()
 
     def configure_optimizers(self):
@@ -249,6 +251,11 @@ def main():
     model = Resnet_Classifier(device, task, lr, num_classes)
 
     trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
+
+    if device == "ipu":
+        # Kludge for stat return bugs on Graphcore is to validate + test on CPU
+        print(f"As we are running on Graphcore, validating on CPU...")
+        trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator="cpu", devices=1)
     val_stats = trainer.validate(model=model, dataloaders=val_dl)
     test_stats = trainer.test(model=model, dataloaders=test_dl)
 
