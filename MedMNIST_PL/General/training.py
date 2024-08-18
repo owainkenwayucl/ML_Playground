@@ -226,7 +226,7 @@ def main():
     lr = 0.001
     stats["lr"] = lr
 
-    print(json.dumps(stats))
+    print(json.dumps(stats, indent=4))
 
     train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
 
