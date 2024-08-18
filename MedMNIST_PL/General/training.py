@@ -32,7 +32,7 @@ def detect_platform():
             print(f"Detected Cuda Device: {device_name}")
         torch.set_float32_matmul_precision('high')
         print("Enabling TensorFloat32 cores.")
-    else if:
+    elif:
         try: 
             import poptorch
             num_acc = int(os.getenv("NUM_AVAILABLE_IPU", 1))
