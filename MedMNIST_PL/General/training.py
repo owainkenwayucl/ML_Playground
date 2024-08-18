@@ -104,8 +104,9 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
-        self.log("train_acc", accuracy, on_step=False, on_epoch=True, sync_dist=True)
-        self.log("train_loss", loss)
+        if not (self.device_name == "ipu"):
+            self.log("train_acc", accuracy, on_step=False, on_epoch=True, sync_dist=True)
+            self.log("train_loss", loss)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -120,7 +121,8 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
-        self.log("val_acc", accuracy, sync_dist=True)
+        if not (self.device_name == "ipu"):
+            self.log("val_acc", accuracy, sync_dist=True)
         return loss
 
     def test_step(self, batch, batch_idx):
@@ -135,7 +137,8 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
-        self.log("test_acc", accuracy, sync_dist=True)
+        if not (self.device_name == "ipu"):
+            self.log("test_acc", accuracy, sync_dist=True)
         return loss
 
     def configure_optimizers(self):
