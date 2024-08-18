@@ -177,6 +177,7 @@ def write_onnx(model, filename):
 
 def main():
     device, num_acc = detect_platform()
+    print(f"Detected device config: {device}. {num_acc}")
     stats = {}
     # Define parameters
     dataset = "pathmnist"
