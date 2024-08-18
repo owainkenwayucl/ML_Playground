@@ -23,7 +23,7 @@ mlbc = "multi-label, binary-class"
 
 def detect_platform():
     num_acc = 1
-    device = cpu
+    device = "cpu"
     # Set up devcies
     if torch.cuda.is_available():
         device = "cuda"
@@ -41,7 +41,7 @@ def detect_platform():
             device = "ipu"
         except:
             pass     
-               
+
     return device, num_acc
 
 print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
