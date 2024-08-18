@@ -22,8 +22,8 @@ import onnxruntime
 mlbc = "multi-label, binary-class"
 
 def detect_platform():
-    num_acc = 1
-    device = "cpu"
+    num_acc = "auto"
+    device = "auto"
     # Set up devcies
     if torch.cuda.is_available():
         device = "cuda"
