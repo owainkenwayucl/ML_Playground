@@ -82,6 +82,9 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         self.model = torchvision.models.resnet18(num_classes=num_classes)
         self.task = task
         self.device_name = device
+        self.log_safe = True
+        if (self.device_name == "ipu"):
+            self.log_safe = False
         self.lr = lr
 
         if task == mlbc:
@@ -104,7 +107,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
-        if not (self.device_name == "ipu"):
+        if self.log_safe:
             self.log("train_acc", accuracy, on_step=False, on_epoch=True, sync_dist=True)
             self.log("train_loss", loss)
         return loss
@@ -121,7 +124,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
-        if not (self.device_name == "ipu"):
+        if self.log_safe:
             self.log("val_acc", accuracy, sync_dist=True)
         return loss
 
@@ -137,7 +140,7 @@ class Resnet_Classifier(pytorch_lightning.LightningModule):
         loss = self.loss_module(outputs, targets)
 
         accuracy = (outputs.argmax(dim=-1) == targets).float().mean()
-        if not (self.device_name == "ipu"):
+        if self.log_safe:
             self.log("test_acc", accuracy, sync_dist=True)
         return loss
 
