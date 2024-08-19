@@ -45,7 +45,6 @@ def detect_platform():
 
     return device, num_acc
 
-print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
 def generate_dataloaders(dataset, batch_size):
 
@@ -208,6 +207,8 @@ def main():
     parser.add_argument('--batch-size', metavar='batchsize', type=int, help="Set the batch size.")
 
     args = parser.parse_args()
+
+    print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
 
     device, num_acc = detect_platform()
     print(f"Detected device config: {device}:{num_acc}")
