@@ -3,8 +3,15 @@ import torch
 import torch.nn
 import torch.utils.data
 import torch.optim
+
+import warnings
+
+# Suppress Torchvision warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 import torchvision.models
 import torchvision.transforms
+warnings.filterwarnings("default", category=UserWarning)
+
 import tqdm
 
 import time
