@@ -207,6 +207,8 @@ def main():
     parser.add_argument('--epochs', metavar='epochs', type=int, help="Set the number of epochs.")
     parser.add_argument('--batch-size', metavar='batchsize', type=int, help="Set the batch size.")
 
+    args = parser.parse_args()
+
     device, num_acc = detect_platform()
     print(f"Detected device config: {device}:{num_acc}")
     stats = {}
@@ -218,8 +220,6 @@ def main():
     batch_size = 1024
     if device == "ipu":
         batch_size = 2 # limited memory
-
-    args = parser.parse_args()
 
     if args.epochs != None:
         num_epochs = args.epochs
