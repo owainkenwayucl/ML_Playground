@@ -11,6 +11,7 @@ import time
 import json
 import sys
 import os
+import argparse 
 
 import pytorch_lightning
 
@@ -202,6 +203,10 @@ def write_onnx(model, filename):
     print("Validation success")
 
 def main():
+    parser = argparse.ArgumentParser(description='Train model.')
+    parser.add_argument('--epochs', metavar='epochs', type=int, help="Set the number of epochs.")
+    parser.add_argument('--batch-size', metavar='batchsize', type=int, help="Set the batch size.")
+
     device, num_acc = detect_platform()
     print(f"Detected device config: {device}:{num_acc}")
     stats = {}
@@ -214,13 +219,13 @@ def main():
     if device == "ipu":
         batch_size = 2 # limited memory
 
-    if len(sys.argv) > 1:        
-        num_epochs = int(sys.argv[1])
-        print(f" >>> Setting num_epochs to {num_epochs}")
+    args = parser.parse_args()
 
-    if len(sys.argv) > 2:
-        batch_size = int(sys.argv[2])
-        print(f" >>> Setting batch_size to {batch_size}")
+    if args.epochs != None:
+        num_epochs = args.epochs
+
+    if args.batch_size != None:
+        batch_size = args.batch_size
 
     output_filename = f"medmnist_classifier_{dataset}_{num_epochs}"
 
