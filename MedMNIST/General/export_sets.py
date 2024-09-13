@@ -42,7 +42,7 @@ def export_sets():
         for element in datasets[dataset]:
             image = element[0]
             category_index = element[1][0]
-            category = classes[element[1][0]]
+            category = classes[int(element[1][0])]
 
             filename = f"{dataset}/{index}_{category_index}_{category}.png"
             print(f"Writing out {filename}")
