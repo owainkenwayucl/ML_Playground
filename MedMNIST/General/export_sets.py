@@ -7,6 +7,9 @@ def ensure_directories(output_directories = ['train', 'test', 'val']):
     for a in output_directories:
         os.makedirs(a, exist_ok=True)
 
+def str_to_filename(str):
+    return str.replace(" ", "_").replace("/", "_")
+
 def export_sets():
     import torch, torchvision
     import medmnist
@@ -44,7 +47,7 @@ def export_sets():
             category_index = element[1][0]
             category = classes[str(element[1][0])]
 
-            filename = f"{dataset}/{index}_{category_index}_{category}.png"
+            filename = f"{dataset}/{index}_{category_index}_{str_to_filename(category)}.png"
             print(f"Writing out {filename}")
 
             image.save(filename)
