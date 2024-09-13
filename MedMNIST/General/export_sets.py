@@ -21,17 +21,18 @@ def export_sets():
 
     data_class = getattr(medmnist, info["python_class"])
 
-    dataset_names = ['train', 'test', 'val']
+    dataset_names = ['test', 'val']
+    #dataset_names = ['train', 'test', 'val']
 
     ensure_directories(dataset_names)
 
     datasets = {}
 
-    train = data_class(split="train", download=True, size=224, mmap_mode='r')
+    #train = data_class(split="train", download=True, size=224, mmap_mode='r')
     test = data_class(split="test",  download=True, size=224, mmap_mode='r')
     val = data_class(split="val",  download=True, size=224, mmap_mode='r')
 
-    datasets["train"] = train
+    #datasets["train"] = train
     datasets["test"] = test
     datasets["val"] = val
 
