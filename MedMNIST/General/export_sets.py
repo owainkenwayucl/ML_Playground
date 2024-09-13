@@ -18,6 +18,7 @@ def export_sets():
 
     n_channels = info["n_channels"]
     n_classes = len(info["label"])
+    classes = info["label"]
 
     data_class = getattr(medmnist, info["python_class"])
 
@@ -40,13 +41,12 @@ def export_sets():
         index = 0
         for element in datasets[dataset]:
             image = element[0][0]
-            category = classes[element[1]]
+            category = classes[element[0][1][0]]]
 
             filename = f"{dataset}/{index}.png"
             print(f"Writing out {filename}")
 
-            temp_i = Image.fromarray(element)
-            temp_i.save(filename)
+            image.save(filename)
             index += 1
 
 
