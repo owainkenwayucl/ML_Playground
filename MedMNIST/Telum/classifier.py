@@ -45,11 +45,16 @@ def main():
     test_image = numpy.subtract(test_image, ti_min)
     test_image = numpy.divide(test_image, ti_range)
 
+    ti_max = numpy.max(test_image)
+    ti_min = numpy.min(test_image)
+
+    print(f"Normalised image max {ti_max}, image min {ti_min}")
+
     c = "<not defined>"
 
 
     print(f"Loaded image: {iname}")
-    show(test_image, ANSI_COLOURS)
+    #show(test_image, ANSI_COLOURS)
 
     results = inference(test_image)
  
