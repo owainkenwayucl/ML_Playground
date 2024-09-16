@@ -24,7 +24,7 @@ def process_image(filename):
     from PIL import Image
 
     test_image_png = Image.open(filename)
-    test_image_c = numpy.copy(numpy.array(test_image_png, dtype=numpy.float32), order="C")
+    test_image_c = numpy.array(test_image_png, dtype=numpy.float32)
     test_image = numpy.moveaxis(test_image_c, 2, 0)
 
     ti_max = numpy.max(test_image)
@@ -42,7 +42,7 @@ def process_image(filename):
 
     print(f"Normalised image max {ti_max}, image min {ti_min}")
 
-    return test_image
+    return numpy.copy(test_image, order='C')
 
 def main():
     import sys
