@@ -1,6 +1,6 @@
 from PyRuntime import OMExecutionSession
 import json
-import numpy as np
+import numpy
 import time
 
 model = "MedMNIST/medmnist_classifier_pathmnist_30_PL.so"
@@ -15,11 +15,11 @@ def inference(image_data):
     signature = input_signature_json[0]
     input_type = signature["type"]
 
-    images = image_data[0][np.newaxis,np.newaxis,...].astype(convert_types[input_type])
+    images = image_data[0][numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
     
     if (len(image_data) > 1):
         for a in range(1, len(image_data)):
-            image = image_data[a][np.newaxis,np.newaxis,...].astype(convert_types[input_type])
+            image = image_data[a][numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
             images = np.concatenate((images, image), axis=0)
     imageset = []
     imageset.append(images)
@@ -93,7 +93,7 @@ def main():
 
     for a in range(n):
         c = labels[a]
-        r = classes[np.argmax(results['output'][0][a])]
+        r = classes[numpy.argmax(results['output'][0][a])]
         if (c == r):
             correct = correct + 1
         #print(f"Expected: {c}\nPredicted: {r}")
