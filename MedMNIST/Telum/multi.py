@@ -43,7 +43,7 @@ def process_image(filename):
     ti_max = numpy.max(test_image)
     ti_min = numpy.min(test_image)
 
-    print(f"Image max {ti_max}, image min {ti_min}")
+    #print(f"Image max {ti_max}, image min {ti_min}")
 
     # first put in range 0:1
     ti_range = 255.0
@@ -58,7 +58,7 @@ def process_image(filename):
     ti_max = numpy.max(test_image)
     ti_min = numpy.min(test_image)
 
-    print(f"Normalised image max {ti_max}, image min {ti_min}")
+    #print(f"Normalised image max {ti_max}, image min {ti_min}")
     
     return numpy.copy(test_image, order='C')
 
