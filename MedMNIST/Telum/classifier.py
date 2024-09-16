@@ -27,7 +27,7 @@ def main():
 
     iname = "test.png"
 
-    classes = {'adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium'}
+    classes = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
 
     if len(sys.argv) > 1:
         iname = sys.argv[1]
