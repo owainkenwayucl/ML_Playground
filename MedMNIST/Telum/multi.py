@@ -33,7 +33,6 @@ def inference(image_data):
 
     return output
 
-
 def process_image(filename):
     from PIL import Image
 
@@ -46,17 +45,22 @@ def process_image(filename):
 
     print(f"Image max {ti_max}, image min {ti_min}")
 
-    ti_range = ti_max - ti_min
+    # first put in range 0:1
+    ti_range = 255.0
 
-    test_image = numpy.subtract(test_image, ti_min)
     test_image = numpy.divide(test_image, ti_range)
+
+    # then approximate torchvision wtf transform
+
+    test_image = numpy.subtract(test_image, 0.5)
+    test_image = numpy.divide(test_image, 0.5)
 
     ti_max = numpy.max(test_image)
     ti_min = numpy.min(test_image)
 
     print(f"Normalised image max {ti_max}, image min {ti_min}")
-
-    return test_image
+    
+    return numpy.copy(test_image, order='C')
 
 def main():
     import sys
