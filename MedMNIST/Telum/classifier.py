@@ -23,7 +23,7 @@ def inference(image):
 def process_image(filename):
     from PIL import Image
 
-    test_image_png = Image.open(iname)
+    test_image_png = Image.open(filename)
     test_image = numpy.array(test_image_png, dtype=numpy.float32)
 
     ti_max = numpy.max(test_image)
