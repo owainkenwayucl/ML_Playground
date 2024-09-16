@@ -54,8 +54,7 @@ def main():
 
     tokens = iname.split("_")
     if len(tokens) > 1:
-        c = int(tokens[1])
-
+        c = classes(int(tokens[1]))
 
     print(f"Loaded image: {iname}")
     #show(test_image, ANSI_COLOURS)
