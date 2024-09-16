@@ -101,7 +101,7 @@ def main():
         r = classes[numpy.argmax(results['output'][0][a])]
         if (c == r):
             correct = correct + 1
-        print(f"Expected: {c}\nPredicted: {r}")
+        #print(f"Expected: {c}\nPredicted: {r}")
 
     
     print(f"Percentage correct: {100*(correct/n)}%")
