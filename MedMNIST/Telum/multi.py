@@ -20,7 +20,7 @@ def inference(image_data):
     if (len(image_data) > 1):
         for a in range(1, len(image_data)):
             image = image_data[a][numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
-            images = np.concatenate((images, image), axis=0)
+            images = numpy.concatenate((images, image), axis=0)
     imageset = []
     imageset.append(images)
     setup_stop = time.time()
