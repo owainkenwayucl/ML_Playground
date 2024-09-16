@@ -20,17 +20,8 @@ def inference(image):
 
     return output
 
-def main():
-    import sys
-    import numpy
+def process_image(filename):
     from PIL import Image
-
-    iname = "test.png"
-
-    classes = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
-
-    if len(sys.argv) > 1:
-        iname = sys.argv[1]
 
     test_image_png = Image.open(iname)
     test_image = numpy.array(test_image_png, dtype=numpy.float32)
@@ -49,6 +40,20 @@ def main():
     ti_min = numpy.min(test_image)
 
     print(f"Normalised image max {ti_max}, image min {ti_min}")
+
+    return test_image
+
+def main():
+    import sys
+    
+    iname = "test.png"
+
+    classes = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
+
+    if len(sys.argv) > 1:
+        iname = sys.argv[1]
+
+    test_image = process_image(iname)
 
     c = "<not defined>"
 
