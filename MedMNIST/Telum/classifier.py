@@ -1,6 +1,6 @@
 from PyRuntime import OMExecutionSession
 import json
-import numpy as np
+import numpy
 model = "MedMNIST/medmnist_classifier_pathmnist_30_PL.so"
 
 convert_types = {"f32":"float32",
@@ -12,7 +12,7 @@ def inference(image):
     signature = input_signature_json[0]
     input_type = signature["type"]
 
-    image = image[np.newaxis,np.newaxis,...].astype(convert_types[input_type])
+    image = image[numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
     imageset = []
     imageset.append(image)
     output = {}
