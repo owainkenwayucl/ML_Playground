@@ -1,0 +1,59 @@
+from PyRuntime import OMExecutionSession
+import json
+import numpy as np
+model = "MedMNIST/medmnist_classifier_pathmnist_30_PL.so"
+
+convert_types = {"f32":"float32",
+                 "f16":"float16"}
+
+def inference(image):
+    session = OMExecutionSession(model)
+    input_signature_json = json.loads(session.input_signature())
+    signature = input_signature_json[0]
+    input_type = signature["type"]
+
+    image = image[np.newaxis,np.newaxis,...].astype(convert_types[input_type])
+    imageset = []
+    imageset.append(image)
+    output = {}
+    output["output"] = session.run(imageset)
+
+    return output
+
+def main():
+    import sys
+    import numpy
+    from PIL import Image
+
+    iname = "test.png"
+
+    classes = {'adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium'}
+
+    if len(sys.argv) > 1:
+        iname = sys.argv[1]
+
+    test_image_png = Image.open(iname)
+    test_image = numpy.array(test_image_png, dtype=numpy.float32)
+
+    ti_max = numpy.max(test_image)
+    ti_min = numpy.min(test_image)
+
+    print(f"Image max {ti_max}, image min {ti_min}")
+
+    ti_range = ti_max - ti_min
+
+    test_image = numpy.subtract(test_image, ti_min)
+    test_image = numpy.divide(test_image, ti_range)
+
+    c = "<not defined>"
+
+
+    print(f"Loaded image: {iname}")
+    show(test_image, ANSI_COLOURS)
+
+    results = inference(test_image)
+ 
+    print(f"Expected: {c}\nPredicted: {classes[np.argmax(results['output'])]}")
+
+if __name__ == "__main__":
+    main()
