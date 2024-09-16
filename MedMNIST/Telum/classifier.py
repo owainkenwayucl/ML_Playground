@@ -24,7 +24,7 @@ def process_image(filename):
     from PIL import Image
 
     test_image_png = Image.open(filename)
-    test_image_c = numpy.array(test_image_png, dtype=numpy.float32)
+    test_image_c = numpy.copy(numpy.array(test_image_png, dtype=numpy.float32), ordering="C")
     test_image = numpy.moveaxis(test_image_c, 2, 0)
 
     ti_max = numpy.max(test_image)
