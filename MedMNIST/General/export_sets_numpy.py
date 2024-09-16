@@ -48,7 +48,7 @@ def export_sets():
             category_index = element[1][0]
             category = classes[str(element[1][0])]
 
-            filename = f"{dataset}/{index}_{category_index}_{str_to_filename(category)}.np"
+            filename = f"{dataset}/{index}_{category_index}_{str_to_filename(category)}.npz"
             print(f"Writing out {filename}")
 
             numpy.savez(filename, image)
