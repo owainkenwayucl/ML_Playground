@@ -76,7 +76,7 @@ def main():
         images.append(image)
         c = "<not defined>"
 
-        tokens = iname.split("_")
+        tokens = a.split("_")
         if len(tokens) > 1:
             c = classes[int(tokens[1])]
         labels.append(c)
