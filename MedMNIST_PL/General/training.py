@@ -247,10 +247,10 @@ def main():
     base_model_str = "resnet18"
 
     if args.base_model != None:
-        else if args.base_model == "resnet50":
+        elif args.base_model == "resnet50":
             base_model = torchvision.models.resnet50(num_classes=num_classes)
             base_model_str = "resnet50"
-        else if args.base_model == "resnet152":
+        elif args.base_model == "resnet152":
             base_model_str = "resnet152"
             base_model = torchvision.models.resnet152(num_classes=num_classes)
 
