@@ -84,9 +84,9 @@ def generate_dataloaders(dataset, batch_size):
     return train_dataloader, val_dataloader, test_dataloader, task, n_classes
 
 class Resnet_Classifier(pytorch_lightning.LightningModule):
-    def __init__(self, device, task, lr, num_classes):
+    def __init__(self, device, task, lr, base_model):
         super().__init__()
-        self.model = torchvision.models.resnet18(num_classes=num_classes)
+        self.model = base_model
         self.task = task
         self.device_name = device
         self.log_safe = True
@@ -212,6 +212,7 @@ def main():
     parser = argparse.ArgumentParser(description='Train model.')
     parser.add_argument('--epochs', metavar='epochs', type=int, help="Set the number of epochs.")
     parser.add_argument('--batch-size', metavar='batchsize', type=int, help="Set the batch size.")
+    parser.add_argument('--base-model', metavar='base_model', type=str, help="Model to use (default resnet18)")
 
     args = parser.parse_args()
 
@@ -235,7 +236,27 @@ def main():
     if args.batch_size != None:
         batch_size = args.batch_size
 
-    output_filename = f"medmnist_classifier_{dataset}_{num_epochs}"
+    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
+
+    lr = 0.001
+
+
+    train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
+
+    base_model = torchvision.models.resnet18(num_classes=num_classes)
+    base_model_str = "resnet18"
+
+    if args.base_model != None:
+        else if args.base_model == "resnet50":
+            base_model = torchvision.models.resnet50(num_classes=num_classes)
+            base_model_str = "resnet50"
+        else if args.base_model == "resnet152":
+            base_model_str = "resnet152"
+            base_model = torchvision.models.resnet152(num_classes=num_classes)
+
+    model = Resnet_Classifier(device, task, lr, base_model)
+
+    output_filename = f"medmnist_classifier_{base_model_str}_{dataset}_{num_epochs}"
 
     checkpoint_filename = f"{output_filename}.ckpt"
     onnx_filename = f"{output_filename}.onnx"
@@ -251,17 +272,9 @@ def main():
     stats["num_accelerators"] = num_acc
     stats["num_epochs"] = num_epochs
     stats["batch_size"] = batch_size
-
-    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
-
-    lr = 0.001
     stats["lr"] = lr
 
     print(json.dumps(stats, indent=4))
-
-    train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
-
-    model = Resnet_Classifier(device, task, lr, num_classes)
 
     trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
 
