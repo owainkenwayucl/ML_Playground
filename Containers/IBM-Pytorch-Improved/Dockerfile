@@ -9,6 +9,6 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get autoremove -y
 RUN apt-get install -y git python3.10-venv 
 
 # Install user friendliness tools
-RUN vim tmux screen
+RUN apt-get install -y vim tmux screen
 
 USER ibm-user
