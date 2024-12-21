@@ -240,7 +240,10 @@ def main():
     if args.batch_size != None:
         batch_size = args.batch_size
 
-    trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
+    if device == "ipu": 
+        trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc, precision=16)
+    else: 
+        trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
 
     lr = 0.001
 
