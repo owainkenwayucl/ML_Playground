@@ -253,7 +253,7 @@ def main():
     if args.base_model != None:
         if args.base_model == "resnet34":
             base_model_str = "resnet34"
-            base_model = torchvision.models.resnet43(num_classes=num_classes)
+            base_model = torchvision.models.resnet34(num_classes=num_classes)
         elif args.base_model == "resnet50":
             base_model_str = "resnet50"
             base_model = torchvision.models.resnet50(num_classes=num_classes)
