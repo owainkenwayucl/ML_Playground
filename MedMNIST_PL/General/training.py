@@ -270,6 +270,9 @@ def main():
 
     model = Resnet_Classifier(device, task, lr, base_model)
 
+    if device == "ipu":
+        model = model.half()
+
     output_filename = f"medmnist_classifier_{base_model_str}_{dataset}_{num_epochs}"
 
     checkpoint_filename = f"{output_filename}.ckpt"
