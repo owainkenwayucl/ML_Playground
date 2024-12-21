@@ -251,12 +251,19 @@ def main():
     base_model_str = "resnet18"
 
     if args.base_model != None:
-        if args.base_model == "resnet50":
-            base_model = torchvision.models.resnet50(num_classes=num_classes)
+        if args.base_model == "resnet34":
+            base_model_str = "resnet34"
+            base_model = torchvision.models.resnet43(num_classes=num_classes)
+        elif args.base_model == "resnet50":
             base_model_str = "resnet50"
+            base_model = torchvision.models.resnet50(num_classes=num_classes)
+        elif args.base_model == "resnet101":
+            base_model_str = "resnet101"            
+            base_model = torchvision.models.resne101(num_classes=num_classes)
         elif args.base_model == "resnet152":
             base_model_str = "resnet152"
             base_model = torchvision.models.resnet152(num_classes=num_classes)
+      
 
     model = Resnet_Classifier(device, task, lr, base_model)
 
