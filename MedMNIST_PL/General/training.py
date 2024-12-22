@@ -242,11 +242,6 @@ def main():
     if args.batch_size != None:
         batch_size = args.batch_size
 
-    if args.half_precision: 
-        trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc, precision=16)
-    else: 
-        trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
-
     lr = 0.001
     if args.lr != None:
         lr = args.lr
@@ -280,7 +275,12 @@ def main():
     prec_words = "32bit"
 
     for repeat in range(repeats):
-        corrected_epochs = num_epochs * repeat
+        corrected_epochs = num_epochs * (1 + repeat)
+        if args.half_precision: 
+            trainer = pytorch_lightning.Trainer(max_epochs=corrected_epochs, accelerator=device, devices=num_acc, precision=16)
+        else: 
+            trainer = pytorch_lightning.Trainer(max_epochs=corrected_epochs, accelerator=device, devices=num_acc)
+            
         print(f"Performing training iteration {repeat} of {repeats} for {corrected_epochs} epochs.")
         if args.half_precision: 
             print(f"Quantising 32 bit floats to 16 bit...")
