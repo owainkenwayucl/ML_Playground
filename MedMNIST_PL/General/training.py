@@ -277,9 +277,9 @@ def main():
     for repeat in range(repeats):
         corrected_epochs = num_epochs * (1 + repeat)
         if args.half_precision: 
-            trainer = pytorch_lightning.Trainer(max_epochs=corrected_epochs, accelerator=device, devices=num_acc, precision=16)
+            trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc, precision=16)
         else: 
-            trainer = pytorch_lightning.Trainer(max_epochs=corrected_epochs, accelerator=device, devices=num_acc)
+            trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
             
         print(f"Performing training iteration {repeat} of {repeats} for {corrected_epochs} epochs.")
         if args.half_precision: 
