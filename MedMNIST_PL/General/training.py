@@ -217,7 +217,7 @@ def main():
     parser.add_argument('--epochs', metavar='epochs', type=int, help="Set the number of epochs.")
     parser.add_argument('--batch-size', metavar='batchsize', type=int, help="Set the batch size.")
     parser.add_argument('--base-model', metavar='base_model', type=str, help="Model to use (default resnet18)")
-
+    parser.add_argument('--half-precision', action='store_true', help="Train in 16 bit")
     args = parser.parse_args()
 
     print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
@@ -240,7 +240,7 @@ def main():
     if args.batch_size != None:
         batch_size = args.batch_size
 
-    if device == "ipu": 
+    if args.half_precision: 
         trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc, precision=16)
     else: 
         trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
@@ -270,7 +270,8 @@ def main():
 
     model = Resnet_Classifier(device, task, lr, base_model)
 
-    if device == "ipu":
+    if args.half_precision: 
+        print(f"Quantising 32 bit floats to 16 bit...")
         model = model.half()
 
     output_filename = f"medmnist_classifier_{base_model_str}_{dataset}_{num_epochs}"
@@ -290,6 +291,7 @@ def main():
     stats["num_epochs"] = num_epochs
     stats["batch_size"] = batch_size
     stats["lr"] = lr
+    stats["half_precision"] = args.half_precision
 
     print(json.dumps(stats, indent=4))
 
@@ -298,7 +300,9 @@ def main():
     if device == "ipu":
         # Kludge for stat return bugs on Graphcore is to validate + test on CPU
         print(f"As we are running on Graphcore, validating on CPU...")
-        model = model.float()
+        if args.half_precision: 
+            print(f"Up-casting 16 bit floats to 32 bit...")
+            model = model.float()
         trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator="cpu", devices=1)
     val_stats = trainer.validate(model=model, dataloaders=val_dl)
     test_stats = trainer.test(model=model, dataloaders=test_dl)
