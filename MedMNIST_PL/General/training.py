@@ -270,11 +270,14 @@ def main():
 
     model = Resnet_Classifier(device, task, lr, base_model)
 
+    prec_words = "32bit"
+
     if args.half_precision: 
         print(f"Quantising 32 bit floats to 16 bit...")
         model = model.half()
+        prec_words = "16bit"
 
-    output_filename = f"medmnist_classifier_{base_model_str}_{dataset}_{num_epochs}"
+    output_filename = f"medmnist_classifier_{base_model_str}_{dataset}_{num_epochs}_{prec_words}"
 
     checkpoint_filename = f"{output_filename}.ckpt"
     onnx_filename = f"{output_filename}.onnx"
@@ -291,7 +294,7 @@ def main():
     stats["num_epochs"] = num_epochs
     stats["batch_size"] = batch_size
     stats["lr"] = lr
-    stats["half_precision"] = args.half_precision
+    stats["precision"] = prec_words
 
     print(json.dumps(stats, indent=4))
 
