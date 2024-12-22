@@ -215,9 +215,11 @@ def write_onnx(model, filename):
 def main():
     parser = argparse.ArgumentParser(description='Train model.')
     parser.add_argument('--epochs', metavar='epochs', type=int, help="Set the number of epochs.")
+    parser.add_argument('--repeats', metavar='repeats', type=int, help="Set the number of repeats.")
     parser.add_argument('--batch-size', metavar='batchsize', type=int, help="Set the batch size.")
-    parser.add_argument('--base-model', metavar='base_model', type=str, help="Model to use (default resnet18)")
-    parser.add_argument('--half-precision', action='store_true', help="Train in 16 bit")
+    parser.add_argument('--base-model', metavar='base_model', type=str, help="Model to use (default resnet18).")
+    parser.add_argument('--half-precision', action='store_true', help="Train in 16 bit.")
+    parser.add_argument('--lr', metavar='lr', type=float, help="Set learning rate.")
     args = parser.parse_args()
 
     print(f"MedMNIST v{medmnist.__version__} @ {medmnist.HOMEPAGE}")
@@ -246,7 +248,12 @@ def main():
         trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
 
     lr = 0.001
+    if args.lr != None:
+        lr = args.lr
 
+    repeats = 1
+    if args.repeats != None:
+        repeats = args.repeats
 
     train_dl, val_dl, test_dl, task, num_classes = generate_dataloaders(dataset, batch_size)
 
@@ -272,58 +279,62 @@ def main():
 
     prec_words = "32bit"
 
-    if args.half_precision: 
-        print(f"Quantising 32 bit floats to 16 bit...")
-        model = model.half()
-        prec_words = "16bit"
-
-    output_filename = f"medmnist_classifier_{base_model_str}_{dataset}_{num_epochs}_{prec_words}"
-
-    checkpoint_filename = f"{output_filename}.ckpt"
-    onnx_filename = f"{output_filename}.onnx"
-    weights_filename = f"{output_filename}.weights"
-    json_filename = f"{output_filename}.json"
-
-    stats["output_filename"] = output_filename
-    stats["checkpoint_filename"] = checkpoint_filename
-    stats["onnx_filename"] = onnx_filename
-    stats["weights_filename"] = weights_filename
-    stats["json_filename"] = json_filename
-    stats["device"] = device
-    stats["num_accelerators"] = num_acc
-    stats["num_epochs"] = num_epochs
-    stats["batch_size"] = batch_size
-    stats["lr"] = lr
-    stats["precision"] = prec_words
-
-    print(json.dumps(stats, indent=4))
-
-    trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
-
-    if device == "ipu":
-        # Kludge for stat return bugs on Graphcore is to validate + test on CPU
-        print(f"As we are running on Graphcore, validating on CPU...")
+    for repeat in range(repeats):
+        corrected_epochs = num_epochs * repeat
+        print(f"Performing training iteration {repeat} of {repeats} for {corrected_epochs} epochs.")
         if args.half_precision: 
-            print(f"Up-casting 16 bit floats to 32 bit...")
-            model = model.float()
-        trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator="cpu", devices=1)
-    val_stats = trainer.validate(model=model, dataloaders=val_dl)
-    test_stats = trainer.test(model=model, dataloaders=test_dl)
+            print(f"Quantising 32 bit floats to 16 bit...")
+            model = model.half()
+            prec_words = "16bit"
 
-    stats["validation_stats"] = val_stats
-    stats["test_stats"] = test_stats
+        output_filename = f"medmnist_classifier_{base_model_str}_{dataset}_{corrected_epochs}_{repeats}_{prec_words}"
 
-    trainer.save_checkpoint(checkpoint_filename)
-    torch.save(model.model.state_dict(), weights_filename)
+        checkpoint_filename = f"{output_filename}.ckpt"
+        onnx_filename = f"{output_filename}.onnx"
+        weights_filename = f"{output_filename}.weights"
+        json_filename = f"{output_filename}.json"
 
-    if trainer.global_rank == 0:
-        write_onnx(model=model, filename=onnx_filename)
+        stats["output_filename"] = output_filename
+        stats["checkpoint_filename"] = checkpoint_filename
+        stats["onnx_filename"] = onnx_filename
+        stats["weights_filename"] = weights_filename
+        stats["json_filename"] = json_filename
+        stats["device"] = device
+        stats["num_accelerators"] = num_acc
+        stats["num_epochs"] = corrected_epochs
+        stats["repeats"] = repeats
+        stats["batch_size"] = batch_size
+        stats["lr"] = lr
+        stats["precision"] = prec_words
 
-        log_data = json.dumps(stats, indent=4)
-        print(log_data)
+        print(json.dumps(stats, indent=4))
 
-        with open(json_filename, "w") as lfh:
-            lfh.write(log_data)
+        trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
+
+        if device == "ipu":
+            # Kludge for stat return bugs on Graphcore is to validate + test on CPU
+            print(f"As we are running on Graphcore, validating on CPU...")
+            if args.half_precision: 
+                print(f"Up-casting 16 bit floats to 32 bit...")
+                model = model.float()
+            trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator="cpu", devices=1)
+        val_stats = trainer.validate(model=model, dataloaders=val_dl)
+        test_stats = trainer.test(model=model, dataloaders=test_dl)
+
+        stats["validation_stats"] = val_stats
+        stats["test_stats"] = test_stats
+
+        trainer.save_checkpoint(checkpoint_filename)
+        torch.save(model.model.state_dict(), weights_filename)
+
+        if trainer.global_rank == 0:
+            write_onnx(model=model, filename=onnx_filename)
+
+            log_data = json.dumps(stats, indent=4)
+            print(log_data)
+
+            with open(json_filename, "w") as lfh:
+                lfh.write(log_data)
 
 
 if __name__ == "__main__":
