@@ -311,15 +311,17 @@ def main():
 
         trainer.fit(model=model, train_dataloaders=train_dl, val_dataloaders=val_dl)
 
+        val_model = model
+        val_trainer = trainer
         if device == "ipu":
             # Kludge for stat return bugs on Graphcore is to validate + test on CPU
             print(f"As we are running on Graphcore, validating on CPU...")
             if args.half_precision: 
                 print(f"Up-casting 16 bit floats to 32 bit...")
-                model = model.float()
-            trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator="cpu", devices=1)
-        val_stats = trainer.validate(model=model, dataloaders=val_dl)
-        test_stats = trainer.test(model=model, dataloaders=test_dl)
+                val_model = model.float()
+            val_trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator="cpu", devices=1)
+        val_stats = val_trainer.validate(model=val_model, dataloaders=val_dl)
+        test_stats = val_trainer.test(model=val_model, dataloaders=test_dl)
 
         stats["validation_stats"] = val_stats
         stats["test_stats"] = test_stats
@@ -328,7 +330,7 @@ def main():
         torch.save(model.model.state_dict(), weights_filename)
 
         if trainer.global_rank == 0:
-            write_onnx(model=model, filename=onnx_filename)
+            write_onnx(model=val_model, filename=onnx_filename)
 
             log_data = json.dumps(stats, indent=4)
             print(log_data)
