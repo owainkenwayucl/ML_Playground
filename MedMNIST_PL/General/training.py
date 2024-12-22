@@ -298,6 +298,7 @@ def main():
     if device == "ipu":
         # Kludge for stat return bugs on Graphcore is to validate + test on CPU
         print(f"As we are running on Graphcore, validating on CPU...")
+        model = model.float()
         trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator="cpu", devices=1)
     val_stats = trainer.validate(model=model, dataloaders=val_dl)
     test_stats = trainer.test(model=model, dataloaders=test_dl)
