@@ -268,7 +268,12 @@ def main():
         elif args.base_model == "resnet152":
             base_model_str = "resnet152"
             base_model = torchvision.models.resnet152(num_classes=num_classes)
-      
+        elif args.base_model == "wideresnet50":
+            base_model_str = "wideresnet50_2"
+            base_model = torchvision.models.wide_resnet50_2(num_classes=num_classes)
+        elif args.base_model == "wideresnet101":
+            base_model_str = "wideresnet101_2"
+            base_model = torchvision.models.wide_resnet101_2(num_classes=num_classes)
 
     model = Resnet_Classifier(device, task, lr, base_model)
 
