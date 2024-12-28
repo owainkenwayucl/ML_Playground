@@ -276,7 +276,7 @@ def main():
             base_model = torchvision.models.wide_resnet101_2(num_classes=num_classes)
         elif args.base_model == "vgg11":
             base_model_str = "vgg11"
-            base_model = torchvision.models.wide_vgg11(num_classes=num_classes)
+            base_model = torchvision.models.vgg11(num_classes=num_classes)
 
     model = Resnet_Classifier(device, task, lr, base_model)
 
