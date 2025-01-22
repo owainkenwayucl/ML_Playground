@@ -290,6 +290,10 @@ def main():
             trainer = pytorch_lightning.Trainer(max_epochs=num_epochs, accelerator=device, devices=num_acc)
             
         print(f"Performing training iteration {repeat} of {repeats} for {corrected_epochs} epochs.")
+
+        # This results in a fail on the Nvidia systems which is annoying. Docs say how we do this has changed so 
+        # I presume that the "acceptable" way has changed between the obsolete version of Pytorch/Lightning which 
+        # is on Graphcore and the current "best practice".
         if args.half_precision: 
             print(f"Quantising 32 bit floats to 16 bit...")
             model = model.half()
