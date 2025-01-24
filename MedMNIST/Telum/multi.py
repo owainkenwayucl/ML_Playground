@@ -3,7 +3,8 @@ import json
 import numpy
 import time
 
-model = "MedMNIST/medmnist_classifier_pathmnist_30_PL.so"
+#model = "MedMNIST/medmnist_classifier_pathmnist_30_PL.so"
+model = "MedMNIST/medmnist_classifier_resnet18_pathmnist_55_20_32bit.so"
 
 convert_types = {"f32":"float32",
                  "f16":"float16"}
