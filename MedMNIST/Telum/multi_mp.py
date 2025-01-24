@@ -40,7 +40,7 @@ def inference(image_data):
     return output
 
 def mp_inference(image_data, nproc):
-    chunked_image_data = chunks(image_ndata. nproc)
+    chunked_image_data = chunks(image_data, nproc)
     q = Queue()
     processes = []
 
