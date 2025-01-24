@@ -10,6 +10,8 @@ model = "MedMNIST/medmnist_classifier_resnet18_pathmnist_55_20_32bit.so"
 convert_types = {"f32":"float32",
                  "f16":"float16"}
 
+q = Queue()
+
 def chunks(l, n):
     for i in range(0,n):
         yield l[i::n]
@@ -37,30 +39,32 @@ def inference(image_data):
     inf_stop = time.time()
     print(f"Time in inference: {inf_stop - inf_start}")
 
-    return output
+    q.put(output)
 
 def mp_inference(image_data, nproc):
-    chunked_image_data = [list(chunks(image_data, nproc))]
-    q = Queue()
+    chunked_image_data = list(chunks(image_data, nproc))
     processes = []
 
     for a in range(nproc):
-        processes.append(Process(target=inference, args=(chunked_image_data[a])))
+        processes.append(Process(target=inference, args=([chunked_image_data[a]])))
         processes[a].start()	
 
     outputs = []
-    for a in range(procs):
+    for a in range(nproc):
+        print(f"Gathering output from {a}")
         outputs.append(q.get())
 
-    for a in range(procs):
+    for a in range(nproc):
+        print(f"Joining {a}")
         processes[a].join()
 
-    merge_output = []
+    print(f"Done")
+    merged_output = []
     for a in outputs:
-        for b in a:
+        for b in a["output"]:
             merged_output.append(b)
 
-    return merged_output
+    return {"output": merged_output}
 
 
 def process_image(filename):
