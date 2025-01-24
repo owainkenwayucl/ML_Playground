@@ -46,14 +46,14 @@ def mp_inference(image_data, nproc):
 
     for a in range(nproc):
         processes.append(Process(target=inference, args=(chunked_image_data[a])))
-		processes[a].start()	
+        processes[a].start()	
 
     outputs = []
     for a in range(procs):
         outputs.append(q.get())
 
     for a in range(procs):
-		processes[a].join()
+        processes[a].join()
 
     merge_output = []
     for a in outputs:
