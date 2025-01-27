@@ -11,6 +11,7 @@ convert_types = {"f32":"float32",
                  "f16":"float16"}
 
 q = Queue()
+magic_block = 1000
 
 def chunks(l, n):
     cl = len(l)//n
@@ -122,30 +123,40 @@ def main():
         for a in range(1,len(sys.argv)):
             iname.append(sys.argv[a])
 
-    labels = []
-    images = []
-    for a in iname:
-        image = process_image(a)
-        images.append(image)
-        c = "<not defined>"
 
-        tokens = a.split("_")
-        if len(tokens) > 1:
-            c = classes[int(tokens[1])]
-        labels.append(c)
 
-    
+    iname_c = chunk(iname, magic_block)
+    correct = 0
     n = len(labels)
-    
     nproc = cpu_count()
     print(f"Detected {nproc} CPU cores.")
-
     start = time.time()
-    results = mp_inference(images, nproc)
+    results = {}
+    results["output"] = []
+    for it in range(len(iname_c)):
+        labels = []
+        images = []
+        for a in iname_c[it]:
+            image = process_image(a)
+            images.append(image)
+            c = "<not defined>"
+
+            tokens = a.split("_")
+            if len(tokens) > 1:
+                c = classes[int(tokens[1])]
+            labels.append(c)
+
+
+
+        results_ = mp_inference(images, nproc)
+
+        # Deep appenc
+        for a in results_["output"]:
+            results["output"].append(a)
+        
+
+
     stop = time.time()
-
-    correct = 0
-
     for a in range(n):
         c = labels[a]
         r = classes[numpy.argmax(results['output'][0][a])]
