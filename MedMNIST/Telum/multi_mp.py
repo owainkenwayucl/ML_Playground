@@ -133,6 +133,7 @@ def main():
     start = time.time()
     results = {}
     results["output"] = []
+    results["output"][0] = []
     labels = []
     for it in range(len(iname_c)):
 
@@ -152,8 +153,8 @@ def main():
         results_ = mp_inference(images, nproc)
 
         # Deep appenc
-        for a in results_["output"]:
-            results["output"].append(a)
+        for a in results_["output"][0]:
+            results["output"][0].append(a)
         
 
     n = len(labels)
