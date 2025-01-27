@@ -125,7 +125,7 @@ def main():
 
 
 
-    iname_c = _chunks(iname, magic_block)
+    iname_c = list(_chunks(iname, magic_block))
     correct = 0
 
     nproc = cpu_count()
