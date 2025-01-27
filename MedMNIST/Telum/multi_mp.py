@@ -74,7 +74,7 @@ def mp_inference(image_data, nproc):
 
     merged_output = numpy.concatenate(merged_output)
 
-    print({"output": [merged_output]})
+    #print({"output": [merged_output]})
     return {"output": [merged_output]}
 
 
