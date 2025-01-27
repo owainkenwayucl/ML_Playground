@@ -127,7 +127,7 @@ def main():
 
     iname_c = _chunks(iname, magic_block)
     correct = 0
-    n = len(labels)
+
     nproc = cpu_count()
     print(f"Detected {nproc} CPU cores.")
     start = time.time()
@@ -156,7 +156,7 @@ def main():
             results["output"].append(a)
         
 
-
+    n = len(labels)
     stop = time.time()
     for a in range(n):
         c = labels[a]
