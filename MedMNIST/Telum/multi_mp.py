@@ -66,8 +66,8 @@ def mp_inference(image_data, nproc):
 
     merged_output = numpy.concatenate(merged_output)
 
-    print({"output": merged_output})
-    return {"output": merged_output}
+    print({"output": [merged_output]})
+    return {"output": [merged_output]}
 
 
 def process_image(filename):
@@ -133,7 +133,6 @@ def main():
     results = mp_inference(images, nproc)
     stop = time.time()
 
-    #print(results)
     correct = 0
 
     for a in range(n):
@@ -141,7 +140,7 @@ def main():
         r = classes[numpy.argmax(results['output'][0][a])]
         if (c == r):
             correct = correct + 1
-        print(f"Expected: {c}\nPredicted: {r}")
+    #    print(f"Expected: {c}\nPredicted: {r}")
 
     
     print(f"Percentage correct: {100*(correct/n)}%")
