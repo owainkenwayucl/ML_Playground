@@ -13,8 +13,8 @@ convert_types = {"f32":"float32",
 q = Queue()
 
 def chunks(l, n):
-    for i in range(0,n):
-        yield l[i::n]
+    for i in range(0,len(l), n):
+        yield l[i:i+n]
 
 def inference(image_data):
     setup_start = time.time()
