@@ -133,7 +133,7 @@ def main():
     start = time.time()
     results = {}
     results["output"] = []
-    results["output"][0] = []
+    results["output"].append([])
     labels = []
     for it in range(len(iname_c)):
 
