@@ -13,16 +13,22 @@ convert_types = {"f32":"float32",
 q = Queue()
 
 def chunks(l, n):
-    for i in range(0,len(l), n):
-        yield l[i:i+n]
+    cl = len(l)//n
+    cr = len(l)%n
+    if cr > 0:
+        cl +=1
+    for i in range(0,len(l), cl):
+        yield l[i:i+cl]
 
-def inference(image_data):
+def inference(index, image_data):
     setup_start = time.time()
+    #print(index)
     session = OMExecutionSession(model)
     input_signature_json = json.loads(session.input_signature())
     signature = input_signature_json[0]
     input_type = signature["type"]
-
+    #print(input_type)
+    #print(type(image_data[0]))
     images = image_data[0][numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
     
     if (len(image_data) > 1):
@@ -39,20 +45,22 @@ def inference(image_data):
     inf_stop = time.time()
     print(f"Time in inference: {inf_stop - inf_start}")
 
-    q.put(output)
+    q.put([index, output])
 
 def mp_inference(image_data, nproc):
     chunked_image_data = list(chunks(image_data, nproc))
     processes = []
+    print(len(chunked_image_data))
 
     for a in range(nproc):
-        processes.append(Process(target=inference, args=([chunked_image_data[a]])))
+        processes.append(Process(target=inference, args=(a, chunked_image_data[a])))
         processes[a].start()	
 
-    outputs = []
+    outputs = {}
     for a in range(nproc):
         print(f"Gathering output from {a}")
-        outputs.append(q.get())
+        message = q.get()
+        outputs[message[0]] = message[1]
 
     for a in range(nproc):
         print(f"Joining {a}")
@@ -60,8 +68,8 @@ def mp_inference(image_data, nproc):
 
     print(f"Done")
     merged_output = []
-    for a in outputs:
-        for b in a["output"]:
+    for a in range(nproc):
+        for b in outputs[a]["output"]:
             merged_output.append(b)
 
     merged_output = numpy.concatenate(merged_output)
