@@ -133,8 +133,9 @@ def main():
     start = time.time()
     results = {}
     results["output"] = []
+    labels = []
     for it in range(len(iname_c)):
-        labels = []
+
         images = []
         for a in iname_c[it]:
             image = process_image(a)
