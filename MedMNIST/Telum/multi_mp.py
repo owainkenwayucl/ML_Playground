@@ -17,8 +17,11 @@ def chunks(l, n):
     cr = len(l)%n
     if cr > 0:
         cl +=1
-    for i in range(0,len(l), cl):
-        yield l[i:i+cl]
+    return _chunks(l,cl)
+
+def _chunks(l, n):
+    for i in range(0,len(l), n):
+        yield l[i:i+n]
 
 def inference(index, image_data):
     setup_start = time.time()
