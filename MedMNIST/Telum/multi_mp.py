@@ -125,7 +125,7 @@ def main():
 
 
 
-    iname_c = chunk(iname, magic_block)
+    iname_c = _chunks(iname, magic_block)
     correct = 0
     n = len(labels)
     nproc = cpu_count()
