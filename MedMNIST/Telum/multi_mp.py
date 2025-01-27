@@ -50,7 +50,7 @@ def inference(index, image_data):
 def mp_inference(image_data, nproc):
     chunked_image_data = list(chunks(image_data, nproc))
     processes = []
-    print(len(chunked_image_data))
+    #print(len(chunked_image_data))
 
     for a in range(nproc):
         processes.append(Process(target=inference, args=(a, chunked_image_data[a])))
