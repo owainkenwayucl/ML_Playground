@@ -29,7 +29,7 @@ def inference(image_data, model, classes):
     inf_stop = time.time()
     #print(f"Time in inference: {inf_stop - inf_start}")
 
-    matched = match_output(results['output'][0], classes)
+    matched = match_output(output['output'][0], classes)
 
     return matched
 
