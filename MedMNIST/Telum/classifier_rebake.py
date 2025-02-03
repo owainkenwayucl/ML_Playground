@@ -5,6 +5,7 @@ import sys
 import argparse
 from image_tools import process_images
 from inference_tools import inference, compare_results
+from multiprocess_tools import mp_inference
 
 classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
 
@@ -16,15 +17,17 @@ def main():
     args = parser.parse_args()
 
     classes = classes_pathmnist
-    
+
     model =  "MedMNIST/medmnist_classifier_resnet18_pathmnist_55_20_32bit.so"
     if args.model != None:
         model = args.model
 
     filenames = args.images
 
-    images, labels = process_images(filenames, classes)
-    matched = inference(images, model, classes)
+    #images, labels = process_images(filenames, classes)
+    #matched = inference(images, model, classes)
+    nproc=2
+    matched, labels = mp_inference(filenames, classes, model, process_images, inference, nproc)
 
     print(matched)
     print(compare_results(matched, labels))
