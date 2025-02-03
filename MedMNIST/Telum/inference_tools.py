@@ -35,7 +35,7 @@ def inference(image_data, model, classes):
 
 def match_output(probabilities, classes):
     matched = []
-    for a in range(len(probabilites)):
+    for a in range(len(probabilities)):
         r = classes[numpy.argmax(probabilities[a])]
         matched.append(r)
 
