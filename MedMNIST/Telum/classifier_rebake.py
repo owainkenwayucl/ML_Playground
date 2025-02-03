@@ -17,6 +17,7 @@ def main():
     matched = inference(images, model, classes)
 
     print(matched)
+    print(compare_results(matched, labels))
 
 if __name__ == "__main__":
     main()

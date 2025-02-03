@@ -40,3 +40,12 @@ def match_output(probabilities, classes):
         matched.append(r)
 
     return matched
+
+def compare_results(results,labels):
+    n = len(results)
+    correct = 0
+    for a in range(n):
+        if results[a] == labels[a]:
+            correct +=1
+
+    return 100*(correct/n)
