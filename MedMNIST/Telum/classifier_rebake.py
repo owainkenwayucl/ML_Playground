@@ -4,7 +4,7 @@ import numpy
 import sys
 import argparse
 from image_tools import process_images
-from inference_tools import inference
+from inference_tools import inference, compare_results
 
 classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
 
