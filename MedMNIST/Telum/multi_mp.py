@@ -26,13 +26,12 @@ def _chunks(l, n):
 
 def inference(index, image_data):
     setup_start = time.time()
-    #print(index)
+
     session = OMExecutionSession(model)
     input_signature_json = json.loads(session.input_signature())
     signature = input_signature_json[0]
     input_type = signature["type"]
-    #print(input_type)
-    #print(type(image_data[0]))
+
     images = image_data[0][numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
     
     if (len(image_data) > 1):
@@ -54,7 +53,6 @@ def inference(index, image_data):
 def mp_inference(image_data, nproc):
     chunked_image_data = list(chunks(image_data, nproc))
     processes = []
-    #print(len(chunked_image_data))
 
     for a in range(nproc):
         processes.append(Process(target=inference, args=(a, chunked_image_data[a])))
@@ -78,7 +76,6 @@ def mp_inference(image_data, nproc):
 
     merged_output = numpy.concatenate(merged_output)
 
-    #print({"output": [merged_output]})
     return {"output": [merged_output]}
 
 
@@ -91,8 +88,6 @@ def process_image(filename):
 
     ti_max = numpy.max(test_image)
     ti_min = numpy.min(test_image)
-
-    #print(f"Image max {ti_max}, image min {ti_min}")
 
     # first put in range 0:1
     ti_range = 255.0
@@ -107,8 +102,6 @@ def process_image(filename):
     ti_max = numpy.max(test_image)
     ti_min = numpy.min(test_image)
 
-    #print(f"Normalised image max {ti_max}, image min {ti_min}")
-    
     return numpy.copy(test_image, order='C')
 
 def main():
@@ -152,7 +145,7 @@ def main():
 
         results_ = mp_inference(images, nproc)
 
-        # Deep appenc
+        # Deep append
         for a in results_["output"][0]:
             results["output"][0].append(a)
         
@@ -164,8 +157,6 @@ def main():
         r = classes[numpy.argmax(results['output'][0][a])]
         if (c == r):
             correct = correct + 1
-    #    print(f"Expected: {c}\nPredicted: {r}")
-
     
     print(f"Percentage correct: {100*(correct/n)}%")
     print(f"Time taken for {n} inferences: {stop - start} seconds")
