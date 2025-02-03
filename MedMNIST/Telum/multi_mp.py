@@ -3,6 +3,7 @@ import json
 import numpy
 import time
 from multiprocessing import Process, Queue, cpu_count
+from PIL import Image
 
 #model = "MedMNIST/medmnist_classifier_pathmnist_30_PL.so"
 model = "MedMNIST/medmnist_classifier_resnet18_pathmnist_55_20_32bit.so"
@@ -80,7 +81,6 @@ def mp_inference(image_data, nproc):
 
 
 def process_image(filename):
-    from PIL import Image
 
     test_image_png = Image.open(filename)
     test_image_c = numpy.array(test_image_png, dtype=numpy.float32)
