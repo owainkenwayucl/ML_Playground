@@ -10,12 +10,17 @@ classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smoo
 
 def main():
     parser = argparse.ArgumentParser(description="Image Classifier")
+    parser.add_argument("--model",type=str, help="Model to use")
     parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
 
     args = parser.parse_args()
 
     classes = classes_pathmnist
+    
     model =  "MedMNIST/medmnist_classifier_resnet18_pathmnist_55_20_32bit.so"
+    if args.model != None:
+        model = args.model
+
     filenames = args.images
 
     images, labels = process_images(filenames, classes)
