@@ -1,6 +1,7 @@
 from PyRuntime import OMExecutionSession
 import json
 import numpy
+import time
 
 convert_types = {"f32":"float32",
                  "f16":"float16"}
@@ -21,12 +22,12 @@ def inference(image_data, model, classes):
     imageset = []
     imageset.append(images)
     setup_stop = time.time()
-    print(f"Time in setup: {setup_stop - setup_start}")
+    #print(f"Time in setup: {setup_stop - setup_start}")
     output = {}
     inf_start = time.time()
     output["output"] = session.run(imageset)
     inf_stop = time.time()
-    print(f"Time in inference: {inf_stop - inf_start}")
+    #print(f"Time in inference: {inf_stop - inf_start}")
 
     matched = match_output(results['output'][0], classes)
 
