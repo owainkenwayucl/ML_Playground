@@ -5,7 +5,7 @@ import numpy
 convert_types = {"f32":"float32",
                  "f16":"float16"}
 
-def inference(image_data):
+def inference(image_data, model, classes):
     setup_start = time.time()
     session = OMExecutionSession(model)
     input_signature_json = json.loads(session.input_signature())
@@ -28,4 +28,14 @@ def inference(image_data):
     inf_stop = time.time()
     print(f"Time in inference: {inf_stop - inf_start}")
 
-    return output
+    matched = match_output(results['output'][0], classes)
+
+    return matched
+
+def match_output(probabilities, classes):
+    matched = []
+    for a in range(len(probabilites)):
+        r = classes[numpy.argmax(probabilities[a])]
+        matched.append(r)
+
+    return matched
