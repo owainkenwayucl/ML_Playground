@@ -7,6 +7,7 @@ from image_tools import process_images
 from inference_tools import inference, compare_results
 from multiprocess_tools import mp_inference, cpu_count
 import json
+import time
 
 classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
 
@@ -38,11 +39,14 @@ def main():
     #images, labels = process_images(filenames, classes)
     #matched = inference(images, model, classes)
     
+    wall_start = time.time()
     matched, labels, timing = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
+    wall_time = time.time() - wall_start
 
     accuracy = compare_results(matched, labels)
     stats["accuracy"] =  accuracy
     stats["timing"] = timing
+    stats["timing"]["wall time"] = wall_time
 
     print(json.dumps(stats, indent=4))
 
