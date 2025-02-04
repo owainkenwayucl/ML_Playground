@@ -18,7 +18,7 @@ def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, 
     results = []
     labels = []
     for batch in range(len(file_list_c)):
-        image_data, labels_ = loader_procedure(file_list,[batch] classes)
+        image_data, labels_ = loader_procedure(file_list[batch], classes)
         results_ = inf_procedure(image_data, model, classes)
 
     for a in range(len(results_)):
