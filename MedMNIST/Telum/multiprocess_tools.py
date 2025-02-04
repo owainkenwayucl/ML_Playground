@@ -25,7 +25,7 @@ def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, 
         timing["io"] += (time.time() - io_start)
         results_, inf_timing = inf_procedure(image_data, model, classes)
         timing["inference_setup"] += inf_timing["inference_setup"]
-        timing["inference_calc"] += inf_timing["inference_calc"\
+        timing["inference_calc"] += inf_timing["inference_calc"]
         for a in range(len(results_)):
             results.append(results_[a])
             labels.append(labels_[a])
