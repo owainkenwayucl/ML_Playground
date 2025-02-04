@@ -14,9 +14,10 @@ classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smoo
 def main():
     parser = argparse.ArgumentParser(description="Image Classifier")
     parser.add_argument("--model",type=str, help="Model to use")
-    parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
     parser.add_argument("--batch-size", type=int, help="Batch size", default=512)
-
+    parser.add_argument("--mp", type=int, help="Number of worker processes", default=cpuinfo())
+    parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
+    
     args = parser.parse_args()
 
     classes = classes_pathmnist
@@ -28,17 +29,14 @@ def main():
     filenames = args.images
     batch_size = args.batch_size
 
-    nproc=cpu_count()
+    nproc=args.mp
 
     stats = {}
     stats["file list"] = filenames
     stats["nproc"] = nproc
     stats["model"] = model
     stats["batch size"] = batch_size
-
-    #images, labels = process_images(filenames, classes)
-    #matched = inference(images, model, classes)
-    
+   
     wall_start = time.time()
     matched, labels, timing = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
     wall_time = time.time() - wall_start
