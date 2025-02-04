@@ -23,7 +23,7 @@ def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, 
 
     for a in range(len(results_)):
         results.append(results_[a])
-        labels.append(labels[a])
+        labels.append(labels_[a])
 
     q.put({"results":results, "labels":labels})
 
