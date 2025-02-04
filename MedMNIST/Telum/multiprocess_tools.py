@@ -45,9 +45,9 @@ def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, npr
             labels.append(c)
 
     for a in range(nproc):
-        print(f"Joining {a}")
+        #print(f"Joining {a}")
         processes[a].join()
 
-    print(f"Done")
+    #print(f"Done")
 
     return outputs, labels
