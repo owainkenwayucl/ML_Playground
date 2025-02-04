@@ -5,7 +5,8 @@ import sys
 import argparse
 from image_tools import process_images
 from inference_tools import inference, compare_results
-from multiprocess_tools import mp_inference
+from multiprocess_tools import mp_inference, cpu_count
+import json
 
 classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
 
@@ -26,13 +27,22 @@ def main():
     filenames = args.images
     batch_size = args.batch_size
 
+    nproc=cpu_count()
+
+    stats = {}
+    stats["nproc"] = nproc
+    stats["model"] = model
+    stats["batch size"] = batch_size
+
     #images, labels = process_images(filenames, classes)
     #matched = inference(images, model, classes)
-    nproc=2
-    matched, labels = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
+    
+    matched, labels, timing = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
 
-    print(matched)
-    print(compare_results(matched, labels))
+    accuracy = compare_results(matched, labels)
+    stats["accurace"] =  accuracy
+
+    print(json.dumps(stats, indent=4))
 
 if __name__ == "__main__":
     main()

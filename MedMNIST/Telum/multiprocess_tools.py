@@ -1,5 +1,5 @@
 from multiprocessing import Process, Queue, cpu_count
-
+import time
 q = Queue()
 
 def chunks(l, n):
@@ -17,19 +17,25 @@ def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, 
     file_list_c = list(_chunks(file_list, batch_size))
     results = []
     labels = []
+    timing = {"io":0.0, "inference_setup":0.0, "inference_calc": 0.0}
     for batch in range(len(file_list_c)):
-        image_data, labels_ = loader_procedure(file_list_c[batch], classes)
-        results_ = inf_procedure(image_data, model, classes)
 
+        io_start = time.time()
+        image_data, labels_ = loader_procedure(file_list_c[batch], classes)
+        timing["io"] += (time.time() - io_start)
+        results_, inf_timing = inf_procedure(image_data, model, classes)
+        timing["inference_setup"] += inf_timing["inference_setup"]
+        timing["inference_calc"] += inf_timing["inference_calc"\
         for a in range(len(results_)):
             results.append(results_[a])
             labels.append(labels_[a])
 
-    q.put({"results":results, "labels":labels})
+    q.put({"results":results, "labels":labels, "timing":timing})
 
 def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, nproc, batch_size):
     chunked_file_list = list(chunks(file_list, nproc))
     processes = []
+    timing = {"io":0.0, "inference_setup":0.0, "inference_calc": 0.0}
 
     for a in range(nproc):
         processes.append(Process(target=inference, args=(chunked_file_list[a], model, classes, a, loader_procedure, inf_procedure, batch_size)))
@@ -43,6 +49,9 @@ def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, npr
             outputs.append(b)
         for c in message["labels"]:
             labels.append(c)
+        timing["io"] += message["timing"]["io"]
+        timing["inference_setup"] += message["timing"]["inference_setup"]
+        timing["inference_calc"] += message["timing"]["inference_calc"]
 
     for a in range(nproc):
         #print(f"Joining {a}")
@@ -50,4 +59,4 @@ def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, npr
 
     #print(f"Done")
 
-    return outputs, labels
+    return outputs, labels, timing

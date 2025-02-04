@@ -30,8 +30,8 @@ def inference(image_data, model, classes):
     #print(f"Time in inference: {inf_stop - inf_start}")
 
     matched = match_output(output['output'][0], classes)
-
-    return matched
+    timing = {"inference_setup":(setup_stop - setup_start), "inference_calc":(inf_stop - inf_start)}
+    return matched, timing
 
 def match_output(probabilities, classes):
     matched = []
