@@ -1,5 +1,3 @@
-# This does not work yet - this is me trying to refactor all the code into a sensible design
-
 import numpy
 import sys
 import argparse
