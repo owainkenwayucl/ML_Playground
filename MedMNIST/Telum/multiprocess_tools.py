@@ -21,9 +21,9 @@ def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, 
         image_data, labels_ = loader_procedure(file_list_c[batch], classes)
         results_ = inf_procedure(image_data, model, classes)
 
-    for a in range(len(results_)):
-        results.append(results_[a])
-        labels.append(labels_[a])
+        for a in range(len(results_)):
+            results.append(results_[a])
+            labels.append(labels_[a])
 
     q.put({"results":results, "labels":labels})
 
