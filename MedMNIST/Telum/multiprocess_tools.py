@@ -13,18 +13,26 @@ def _chunks(l, n):
     for i in range(0,len(l), n):
         yield l[i:i+n]
 
-def inference(file_list, model, classes, rank, loader_procedure, inf_procedure):
-    image_data, labels = loader_procedure(file_list, classes)
-    results = inf_procedure(image_data, model, classes)
+def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, batch_size):
+    file_list_c = list(_chunks(file_list, batch_size))
+    results = []
+    labels = []
+    for batch in range(len(file_list_c)):
+        image_data, labels_ = loader_procedure(file_list,[batch] classes)
+        results_ = inf_procedure(image_data, model, classes)
+
+    for a in range(len(results_)):
+        results.append(results_[a])
+        labels.append(labels[a])
 
     q.put({"results":results, "labels":labels})
 
-def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, nproc):
+def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, nproc, batch_size):
     chunked_file_list = list(chunks(file_list, nproc))
     processes = []
 
     for a in range(nproc):
-        processes.append(Process(target=inference, args=(chunked_file_list[a], model, classes, a, loader_procedure, inf_procedure)))
+        processes.append(Process(target=inference, args=(chunked_file_list[a], model, classes, a, loader_procedure, inf_procedure, batch_size)))
         processes[a].start()	
 
     outputs = []

@@ -13,6 +13,7 @@ def main():
     parser = argparse.ArgumentParser(description="Image Classifier")
     parser.add_argument("--model",type=str, help="Model to use")
     parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
+    parser.add_argument("--batch-size", type=int, help="Batch size", default=512)
 
     args = parser.parse_args()
 
@@ -23,11 +24,12 @@ def main():
         model = args.model
 
     filenames = args.images
+    batch_size = args.batch_size
 
     #images, labels = process_images(filenames, classes)
     #matched = inference(images, model, classes)
     nproc=2
-    matched, labels = mp_inference(filenames, classes, model, process_images, inference, nproc)
+    matched, labels = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
 
     print(matched)
     print(compare_results(matched, labels))
