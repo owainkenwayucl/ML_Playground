@@ -5,7 +5,8 @@ import sys
 import argparse
 from image_tools import process_images
 from inference_tools import inference, compare_results
-from multiprocess_tools import mp_inference, cpu_count
+from multiprocess_tools import mp_inference
+from multiprocessing import cpu_count
 import json
 
 classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
