@@ -30,6 +30,7 @@ def main():
     nproc=cpu_count()
 
     stats = {}
+    stats["file list"] = filenames
     stats["nproc"] = nproc
     stats["model"] = model
     stats["batch size"] = batch_size
@@ -40,7 +41,8 @@ def main():
     matched, labels, timing = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
 
     accuracy = compare_results(matched, labels)
-    stats["accurace"] =  accuracy
+    stats["accuracy"] =  accuracy
+    stats["timing"] = timing
 
     print(json.dumps(stats, indent=4))
 
