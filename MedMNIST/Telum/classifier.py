@@ -1,80 +1,52 @@
-from PyRuntime import OMExecutionSession
-import json
+# This does not work yet - this is me trying to refactor all the code into a sensible design
+
 import numpy
+import sys
+import argparse
+from image_tools import process_images
+from inference_tools import inference, compare_results
+from multiprocess_tools import mp_inference, cpu_count
+import json
+import time
 
-#model = "MedMNIST/medmnist_classifier_pathmnist_30_PL.so"
-model = "MedMNIST/medmnist_classifier_resnet18_pathmnist_55_20_32bit.so"
-
-convert_types = {"f32":"float32",
-                 "f16":"float16"}
-
-def inference(image):
-    session = OMExecutionSession(model)
-    input_signature_json = json.loads(session.input_signature())
-    signature = input_signature_json[0]
-    input_type = signature["type"]
-
-    image = image[numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
-    imageset = []
-    imageset.append(image)
-    output = {}
-    output["output"] = session.run(imageset)
-
-    return output
-
-def process_image(filename):
-    from PIL import Image
-
-    test_image_png = Image.open(filename)
-    test_image_c = numpy.array(test_image_png, dtype=numpy.float32)
-    test_image = numpy.moveaxis(test_image_c, 2, 0)
-
-    ti_max = numpy.max(test_image)
-    ti_min = numpy.min(test_image)
-
-    print(f"Image max {ti_max}, image min {ti_min}")
-
-    # first put in range 0:1
-    ti_range = 255.0
-
-    test_image = numpy.divide(test_image, ti_range)
-
-    # then approximate torchvision wtf transform
-
-    test_image = numpy.subtract(test_image, 0.5)
-    test_image = numpy.divide(test_image, 0.5)
-
-    ti_max = numpy.max(test_image)
-    ti_min = numpy.min(test_image)
-
-    print(f"Normalised image max {ti_max}, image min {ti_min}")
-    
-    return numpy.copy(test_image, order='C')
+classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
 
 def main():
-    import sys
+    parser = argparse.ArgumentParser(description="Image Classifier")
+    parser.add_argument("--model",type=str, help="Model to use")
+    parser.add_argument("--batch-size", type=int, help="Batch size", default=512)
+    parser.add_argument("--mp", type=int, help="Number of worker processes", default=cpu_count())
+    parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
     
-    iname = "test.png"
+    args = parser.parse_args()
 
-    classes = ('adipose','background','debris','lymphocytes','mucus','smooth muscle','normal colon mucosa','cancer-associated stroma','colorectal adenocarcinoma epithelium')
+    classes = classes_pathmnist
 
-    if len(sys.argv) > 1:
-        iname = sys.argv[1]
+    model =  "MedMNIST/medmnist_classifier_resnet18_pathmnist_55_20_32bit.so"
+    if args.model != None:
+        model = args.model
 
-    test_image = process_image(iname)
+    filenames = args.images
+    batch_size = args.batch_size
 
-    c = "<not defined>"
+    nproc=args.mp
 
-    tokens = iname.split("_")
-    if len(tokens) > 1:
-        c = classes[int(tokens[1])]
+    stats = {}
+    stats["file list"] = filenames
+    stats["nproc"] = nproc
+    stats["model"] = model
+    stats["batch size"] = batch_size
+   
+    wall_start = time.time()
+    matched, labels, timing = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
+    wall_time = time.time() - wall_start
 
-    print(f"Loaded image: {iname}")
-    #show(test_image, ANSI_COLOURS)
+    accuracy = compare_results(matched, labels)
+    stats["accuracy"] =  accuracy
+    stats["timing"] = timing
+    stats["timing"]["wall time"] = wall_time
 
-    results = inference(test_image)
- 
-    print(f"Expected: {c}\nPredicted: {classes[numpy.argmax(results['output'])]}")
+    print(json.dumps(stats, indent=4))
 
 if __name__ == "__main__":
     main()
