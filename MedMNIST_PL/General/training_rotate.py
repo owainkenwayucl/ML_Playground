@@ -74,20 +74,20 @@ def generate_dataloaders(dataset, batch_size):
 
     data_transform90 = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
-        torchvision.transforms.rotate(angle=90),
+        torchvision.transforms.RandomRotation(degrees=[90,90]),
         torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
     data_transform180 = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
-        torchvision.transforms.rotate(angle=180),
+        torchvision.transforms.RandomRotation(degrees=[180,180]),
         torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
 
     data_transform270 = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
-        torchvision.transforms.rotate(angle=270),
+        torchvision.transforms.RandomRotation(degrees=[270,270]),
         torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
