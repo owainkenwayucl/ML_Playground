@@ -14,7 +14,7 @@ def main():
     parser.add_argument("--model",type=str, help="Model to use")
     parser.add_argument("--weights",type=str, help="Weights to use")
     parser.add_argument("--batch-size", type=int, help="Batch size", default=512)
-    parser.add_argument("--mp", type=int, help="Number of worker processes", default=cpu_count())
+    parser.add_argument("--mp", type=int, help="Number of worker processes", default=1)
     parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
     
     args = parser.parse_args()
