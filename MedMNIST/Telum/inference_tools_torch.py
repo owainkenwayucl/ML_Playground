@@ -31,7 +31,7 @@ def inference(image_data, model, classes):
     with torch.inference_mode():
         output["output"] = _model(imageset)
     inf_stop = time.time()
-    #print(f"Time in inference: {inf_stop - inf_start}")
+    print(f"Time in inference: {inf_stop - inf_start}")
 
     matched = match_output(output['output'][0], classes)
     timing = {"inference_setup":(setup_stop - setup_start), "inference_calc":(inf_stop - inf_start)}
