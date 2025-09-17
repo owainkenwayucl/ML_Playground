@@ -12,6 +12,7 @@ classes_pathmnist = ('adipose','background','debris','lymphocytes','mucus','smoo
 def main():
     parser = argparse.ArgumentParser(description="Image Classifier")
     parser.add_argument("--model",type=str, help="Model to use")
+    parser.add_argument("--weights",type=str, help="Weights to use")
     parser.add_argument("--batch-size", type=int, help="Batch size", default=512)
     parser.add_argument("--mp", type=int, help="Number of worker processes", default=cpu_count())
     parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
@@ -20,9 +21,13 @@ def main():
 
     classes = classes_pathmnist
 
-    model =  "MedMNIST/medmnist_classifier_resnet152_pathmnist_25_20_32bit.weights"
+    weights =  "MedMNIST/medmnist_classifier_resnet152_pathmnist_25_20_32bit.weights"
+    model = "resnet152"
     if args.model != None:
         model = args.model
+
+    if args.weights != None:
+        weights = args.weights
 
     filenames = args.images
     batch_size = args.batch_size
@@ -33,10 +38,11 @@ def main():
     stats["file list"] = filenames
     stats["nproc"] = nproc
     stats["model"] = model
+    stats["weights"] = weights
     stats["batch size"] = batch_size
    
     wall_start = time.time()
-    matched, labels, timing = mp_inference(filenames, classes, model, process_images, inference, nproc, batch_size)
+    matched, labels, timing = mp_inference(filenames, classes, (model, weights), process_images, inference, nproc, batch_size)
     wall_time = time.time() - wall_start
 
     accuracy = compare_results(matched, labels)
