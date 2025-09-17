@@ -36,7 +36,7 @@ def inference(image_data, model, classes):
     #output = {}
     inf_start = time.time()
     #output["output"] = session.run(imageset)
-    probabilities = base_model(imageset).to("cpu")
+    probabilities = base_model(imageset).to("cpu").detach().numpy()
     inf_stop = time.time()
     #print(f"Time in inference: {inf_stop - inf_start}")
 
