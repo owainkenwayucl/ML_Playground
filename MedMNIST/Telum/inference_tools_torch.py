@@ -10,7 +10,7 @@ convert_types = {"f32":"float32",
 def inference(image_data, model, classes):
     setup_start = time.time()
     model = torch.load(model)
-    model.eval()
+    #model.eval() #huh?
     input_type = "f32"
 
     images = image_data[0][numpy.newaxis,numpy.newaxis,...].astype(convert_types[input_type])
@@ -25,7 +25,8 @@ def inference(image_data, model, classes):
     #print(f"Time in setup: {setup_stop - setup_start}")
     output = {}
     inf_start = time.time()
-    output["output"] = model(imageset)
+    with torch.inference_mode():
+        output["output"] = model(imageset)
     inf_stop = time.time()
     #print(f"Time in inference: {inf_stop - inf_start}")
 
