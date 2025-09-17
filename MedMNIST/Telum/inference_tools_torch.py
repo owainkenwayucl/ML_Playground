@@ -10,9 +10,11 @@ convert_types = {"f32":"float32",
 
 def inference(image_data, model, classes):
     setup_start = time.time()
+    device=torch.device('nnpa')
     num_classes=9
     _model = torchvision.models.resnet152(num_classes=num_classes)
     _model.load_state_dict(torch.load(model, weights_only=True))
+    _model = _model.to(device)
     _model.eval() #huh?
     input_type = "f32"
 
@@ -26,14 +28,17 @@ def inference(image_data, model, classes):
     imageset.append(images)
     setup_stop = time.time()
     print(f"Time in setup: {setup_stop - setup_start}")
-    output = {}
+    output = []
     inf_start = time.time()
     with torch.inference_mode():
-        output["output"] = _model(imageset)
+#        output["output"] = _model(imageset)
+        for image_ in imageset:
+            image_ = image_.to(devices)
+            output.append(_model(image_).to("cpu"))
     inf_stop = time.time()
     print(f"Time in inference: {inf_stop - inf_start}")
 
-    matched = match_output(output['output'][0], classes)
+    matched = match_output(output, classes)
     timing = {"inference_setup":(setup_stop - setup_start), "inference_calc":(inf_stop - inf_start)}
     return matched, timing
 
