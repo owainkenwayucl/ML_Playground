@@ -9,7 +9,7 @@ convert_types = {"f32":"float32",
 
 def inference(image_data, model, classes):
     setup_start = time.time()
-    model = torch.load(model, weigts_only=False)
+    model = torch.load(model, weights_only=False)
     model.eval() #huh?
     input_type = "f32"
 
