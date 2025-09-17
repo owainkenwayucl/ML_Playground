@@ -29,7 +29,7 @@ def inference(image_data, model, classes):
     #imageset = []
     #imageset.append(images)
 
-    imageset = torch.from_numpy(numpy.array(imageset)).to(device)
+    imageset = torch.from_numpy(numpy.array(image_data)).to(device)
 
     setup_stop = time.time()
     #print(f"Time in setup: {setup_stop - setup_start}")
