@@ -25,7 +25,7 @@ def inference(image_data, model, classes):
     imageset = []
     imageset.append(images)
     setup_stop = time.time()
-    #print(f"Time in setup: {setup_stop - setup_start}")
+    print(f"Time in setup: {setup_stop - setup_start}")
     output = {}
     inf_start = time.time()
     with torch.inference_mode():
