@@ -12,7 +12,7 @@ def inference(image_data, model, classes):
     setup_start = time.time()
     num_classes=9
     _model = torchvision.models.resnet152(num_classes=num_classes)
-    _model.load_state_dict(torch.load(model, wights_only=True))
+    _model.load_state_dict(torch.load(model, weights_only=True))
     _model.eval() #huh?
     input_type = "f32"
 
