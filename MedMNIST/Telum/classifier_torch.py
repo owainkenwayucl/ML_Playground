@@ -20,7 +20,7 @@ def main():
 
     classes = classes_pathmnist
 
-    model =  "MedMNIST/medmnist_classifier_resnet152_pathmnist_25_20_32bit.ckpt"
+    model =  "MedMNIST/medmnist_classifier_resnet152_pathmnist_25_20_32bit.weights"
     if args.model != None:
         model = args.model
 
