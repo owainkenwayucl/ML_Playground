@@ -2,6 +2,7 @@ import torch
 import torchvision
 import numpy
 import time
+import torch_nnpa
 
 def inference(image_data, model, classes):
     setup_start = time.time()
