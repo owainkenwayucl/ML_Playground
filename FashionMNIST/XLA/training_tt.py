@@ -21,7 +21,7 @@ classes = ("T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt",
 # tenstorrent
 torch_xla.runtime.set_device_type("TT")
 
-device = torch_xla.device()
+device = torch.device(torch_xla.device())
 
 # Model structure from Graphcore example
 class ClassificationModel(torch.nn.Module):
