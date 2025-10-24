@@ -88,6 +88,7 @@ test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=32, num_w
 predictions, labels = [], []
 for data, label in test_dataloader:
     predictions += model(data).data.max(dim=1).indices
+    torch_xla.sync() # needed to make XLA do things
     labels += label
 
 timing["inference"]["finish"] = time.time()
