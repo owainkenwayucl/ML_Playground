@@ -70,6 +70,7 @@ for epoch in tqdm(range(epochs), desc="epochs"):
         loss = criterion(outputs, labels)
         loss.backward()
         optimiser.step()
+        torch_xla.sync() # needed to make XLA do things
     epoch_finish = time.time()
     timing["training"][f"epoch_{epoch}"] = epoch_finish - epoch_start
 
