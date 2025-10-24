@@ -64,7 +64,7 @@ for epoch in tqdm(range(epochs), desc="epochs"):
     epoch_start = time.time()
     model.train()
     for images, labels in train_dataloader:
-        images, labels = images.to(device), labels.to(device)
+        images, labels = images.to(device), labels.to(torch.int32).to(device)
         optimiser.zero_grad()
         outputs = model(images)
         loss = criterion(outputs, labels)
