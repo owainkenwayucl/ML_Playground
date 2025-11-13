@@ -41,7 +41,7 @@ def inference(image_data, model, classes):
 
     inf_start = time.time()
 
-    with torch.no_grad()::
+    with torch.no_grad():
         probabilities = base_model(imageset).to("cpu").detach().numpy()
     inf_stop = time.time()
 
