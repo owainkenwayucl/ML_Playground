@@ -15,6 +15,7 @@ def main():
     parser.add_argument("--weights",type=str, help="Weights to use")
     parser.add_argument("--batch-size", type=int, help="Batch size", default=512)
     parser.add_argument("--mp", type=int, help="Number of worker processes", default=1)
+    parser.add_argument("--device", type=int, help="Device ID", default=0)
     parser.add_argument("images", nargs="+", type=str, help="A list of images to classify")
     
     args = parser.parse_args()
@@ -33,6 +34,7 @@ def main():
     batch_size = args.batch_size
 
     nproc=args.mp
+    device = args.device
 
     stats = {}
     stats["file list"] = filenames
@@ -42,7 +44,7 @@ def main():
     stats["batch size"] = batch_size
    
     wall_start = time.time()
-    matched, labels, timing = mp_inference(filenames, classes, (model, weights), process_images, inference, nproc, batch_size)
+    matched, labels, timing = mp_inference(filenames, classes, (model, weights), process_images, inference, nproc, batch_size, device)
     wall_time = time.time() - wall_start
 
     accuracy = compare_results(matched, labels)

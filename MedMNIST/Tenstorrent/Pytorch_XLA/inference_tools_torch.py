@@ -4,7 +4,7 @@ import numpy
 import time
 import torch_xla
 
-def inference(image_data, model, classes):
+def inference(image_data, model, classes, device):
     setup_start = time.time()
 
     num_classes = len(classes)
@@ -29,7 +29,7 @@ def inference(image_data, model, classes):
     base_model.load_state_dict(torch.load(model[1], weights_only=True))
 
     torch_xla.runtime.set_device_type("TT")
-    device = torch_xla.device()
+    device = torch_xla.device(int(device))
     base_model.compile(backend="tt")
     base_model = base_model.to(device)
     base_model.eval()

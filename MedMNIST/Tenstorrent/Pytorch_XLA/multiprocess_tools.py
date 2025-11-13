@@ -13,7 +13,7 @@ def _chunks(l, n):
     for i in range(0,len(l), n):
         yield l[i:i+n]
 
-def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, batch_size):
+def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, batch_size, device):
     file_list_c = list(_chunks(file_list, batch_size))
     results = []
     labels = []
@@ -23,7 +23,7 @@ def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, 
         io_start = time.time()
         image_data, labels_ = loader_procedure(file_list_c[batch], classes)
         timing["io"] += (time.time() - io_start)
-        results_, inf_timing = inf_procedure(image_data, model, classes)
+        results_, inf_timing = inf_procedure(image_data, model, classes, device)
         timing["inference_setup"] += inf_timing["inference_setup"]
         timing["inference_calc"] += inf_timing["inference_calc"]
         for a in range(len(results_)):
@@ -32,13 +32,13 @@ def inference(file_list, model, classes, rank, loader_procedure, inf_procedure, 
 
     q.put({"results":results, "labels":labels, "timing":timing})
 
-def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, nproc, batch_size):
+def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, nproc, batch_size, device):
     chunked_file_list = list(chunks(file_list, nproc))
     processes = []
     timing = {"io":0.0, "inference_setup":0.0, "inference_calc": 0.0}
 
     for a in range(nproc):
-        processes.append(Process(target=inference, args=(chunked_file_list[a], model, classes, a, loader_procedure, inf_procedure, batch_size)))
+        processes.append(Process(target=inference, args=(chunked_file_list[a], model, classes, a, loader_procedure, inf_procedure, batch_size, device)))
         processes[a].start()	
 
     outputs = []
