@@ -38,7 +38,7 @@ def mp_inference(file_list, classes, model, loader_procedure, inf_procedure, npr
     timing = {"io":0.0, "inference_setup":0.0, "inference_calc": 0.0}
 
     for a in range(nproc):
-        processes.append(Process(target=inference, args=(chunked_file_list[a], model, classes, a, loader_procedure, inf_procedure, batch_size, device+a)))
+        processes.append(Process(target=inference, args=(chunked_file_list[a], model, classes, a, loader_procedure, inf_procedure, batch_size, device)))
         processes[a].start()	
 
     outputs = []
