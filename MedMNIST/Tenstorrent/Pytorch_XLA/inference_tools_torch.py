@@ -28,6 +28,8 @@ def inference(image_data, model, classes, device):
 
     base_model.load_state_dict(torch.load(model[1], weights_only=True))
 
+    torch_xla.set_custom_compile_options({"optimization_level":2})
+
     torch_xla.runtime.set_device_type("TT")
     device = torch_xla.device(int(device))
     base_model.compile(backend="tt")
