@@ -4,7 +4,7 @@ import numpy
 import time
 import forge
 
-from image_tools import process_images
+#from image_tools import process_images
 
 def inference(image_data, model, classes, device):
     setup_start = time.time()
@@ -30,15 +30,17 @@ def inference(image_data, model, classes, device):
 
     base_model.load_state_dict(torch.load(model[1], weights_only=True))
 
-    test_image_data,_ = process_images(["testimage_1_blank.png"], classes)
-    test_imageset = torch.from_numpy(numpy.array(test_image_data))
+    #test_image_data,_ = process_images(["testimage_1_blank.png"], classes)
+    #test_imageset = torch.from_numpy(numpy.array(test_image_data))
     imageset = torch.from_numpy(numpy.array(image_data))
     
-    compiled_model = forge.compile(base_model, sample_inputs=[test_imageset])
+    #compiled_model = forge.compile(base_model, sample_inputs=[test_imageset])
+    compiled_model = forge.compile(base_model, sample_inputs=[imageset])
 
     # Warm-up
     for a in range(3):
-       _ = compiled_model(test_imageset)
+       _ = compiled_model(imageset)
+    #   _ = compiled_model(test_imageset)
 
     setup_stop = time.time()
 
