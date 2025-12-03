@@ -4,6 +4,8 @@ import numpy
 import time
 import forge
 
+from image_tools import process_image
+
 def inference(image_data, model, classes, device):
     setup_start = time.time()
 
@@ -28,9 +30,10 @@ def inference(image_data, model, classes, device):
 
     base_model.load_state_dict(torch.load(model[1], weights_only=True))
 
+    test_imageset = torch.from_numpy(numpy.array(process_image("testimage_1_blank.png", classes)))
     imageset = torch.from_numpy(numpy.array(image_data))
     
-    compiled_model = forge.compile(base_model, sample_inputs=[imageset])
+    compiled_model = forge.compile(base_model, sample_inputs=[test_imageset])
 
 
     setup_stop = time.time()
