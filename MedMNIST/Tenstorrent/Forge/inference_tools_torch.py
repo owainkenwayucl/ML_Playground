@@ -37,7 +37,7 @@ def inference(image_data, model, classes, device):
 
     inf_start = time.time()
 
-    probabilities = compiled_model(imageset).numpy()
+    probabilities = compiled_model(imageset)
     inf_stop = time.time()
 
     matched = match_output(probabilities, classes)
