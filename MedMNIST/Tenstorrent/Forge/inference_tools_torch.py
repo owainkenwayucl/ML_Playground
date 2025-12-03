@@ -36,6 +36,9 @@ def inference(image_data, model, classes, device):
     
     compiled_model = forge.compile(base_model, sample_inputs=[test_imageset])
 
+    # Warm-up
+    for a in range(3):
+       _ = compiled_model(test_imageset)
 
     setup_stop = time.time()
 
